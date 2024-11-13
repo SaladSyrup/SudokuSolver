@@ -363,5 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 /SudokuSolver.vcxproj
 /SudokuSolver.vcxproj.filters
+/SudokoSolver.sln
+/.gitattributes
 /.gitignore
+/SudokuSolver.h
 /.gitignore
