@@ -67,10 +67,13 @@ static bool isRegionVaild(SudokuGrid grid, const GridRegion region)
         GridSquare* square = GetSquare(grid, region[locationIndex].row, region[locationIndex].col);
         assert(square != NULL);
 
+        /* VALUE_NONE squares are always valid. */
         if (square->value == VALUE_NONE) continue;
 
+        /* Has this value already been found? */
         if (valueFound[square->value]) return false;
 
+        /* Update to indicate we've encountered this value */
         valueFound[square->value] = true;
     }
 

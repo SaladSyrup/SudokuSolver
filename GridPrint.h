@@ -36,7 +36,7 @@
 /*
 ** Prints grid to stdout.
 **
-** Assumes all values are less than 10.
+** Assumes values are less than 10 and take up only one character space.
 */
 void PrintGrid(SudokuGrid grid);
 

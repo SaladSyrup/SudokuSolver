@@ -1,5 +1,5 @@
 /*
-** SudokuSolver.h
+** GridFile.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,12 +28,46 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_SOLVER_H
-#define SUDOKU_SOLVER_H
+#ifndef GRID_FILE_H
+#define GRID_FILE_H
 
 #include "Grid.h"
-#include "GridFile.h"
-#include "GridPrint.h"
-#include "GridValidate.h"
 
-#endif // !SUDOKU_SOLVER_H
+#include <stdbool.h>
+
+/*
+** Files containing grids should be text files formatted as shown below.
+**
+**      1,2,3,4,5,6,7,8,9
+**      2, ,3, ,5, ,7, ,9
+**      3,2, ,4, ,6, ,8,
+**      4,2,3,4, ,6,7,8,9
+**       , , , , , , , ,
+**      6,2,3,4,5,6,7,8,9
+**      ,,,,,,,,
+**      8,2,3,4,5,6,7,8,9
+**      9,2,3,4,5,6,7,8,9
+**
+**  - Each line is a series of comma separated values corresponding to a single
+**    grid row. Each line must have numGridCols values and (numGridCols - 1)
+**    commas. Unspecified values are considered VALUE_NONE.
+**
+**  - A complete file has numGridRows lines.
+**
+**  - Values must be in the range of 1 to 9 and shall not be greater than
+**    (numSquareValues - 1). No attempt is made to parse multidigit values.
+**
+**  - Whitespace other than '\n' is ignored. Any character outside the range of
+**    '!' to '~' is considered whitespace.
+**
+**  - File content after the first numGridRows lines is ignored.
+*/
+
+/*
+** Loads grid from file.
+**
+** Returns true if the file successfully loaded.
+*/
+bool LoadGrid(const char filename[], SudokuGrid grid);
+
+#endif // !GRID_FILE_H
