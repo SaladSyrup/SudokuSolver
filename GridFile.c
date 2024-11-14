@@ -36,79 +36,113 @@
 #define isWhitespace(ch) (((ch) < '!') || ((ch) > '~'))
 
 /*
-** Reads file to find the next valid non-whitespace character. Returns the
-** character if a valid character is found, otherwise returns '\0' or EOF.
+** Reads file to find the next linefeed or non-whitespace character. Returns
+** the character or EOF.
 */
 static int FindNextChar(FILE* file)
 {
     int input = EOF;
 
     while ((input = getc(file)) != EOF) {
-
-        switch (input) {
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case ',':
-        case '\n':  return input;
-        default:    if (!isWhitespace(input)) return '\0';
-        }
+        if (!isWhitespace(input) || (input == '\n')) break;
     }
 
     return input;
 }
+
+/*
+** Gets the next square value (VALUE_NONE through VALUE_9) from file.
+**
+** If successful, updates *value and returns true.
+**
+** If unsuccesful, returns false. *value will contain the source of the error
+** (e.g., EOF or invalid character).
+*/
+static bool GetValue(FILE* file, int* value)
+{
+    int input = EOF;
+
+    /* Ignore leading linefeeds */
+    while ((input = FindNextChar(file)) == '\n');
+
+    /* Should be a comma or a character 1 through 9 */
+    switch (input) {
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+        *value = input - '0';
+        assert(*value > VALUE_NONE);
+
+        if (*value >= numSquareValues) {
+            *value = input;
+            return false;
+        }
+
+        break;
+
+    case ',':
+        *value = VALUE_NONE;
+        return true;
+
+    default:
+        *value = input;
+        return false;
+    }
+
+    /* Next character after a value can be a comma, linefeed, or EOF */
+    input = FindNextChar(file);
+    switch (input) {
+    case EOF:
+    case ',':
+    case '\n':
+        return true;
+
+    default:
+        *value = input;
+        return false;
+    }
+}
+
 /*
 ** Helper function to accomplish the actual work of reading a file into the
 ** SudokuGrid.
 */
 static bool ReadGridFile(FILE* file, SudokuGrid grid)
 {
-    int input = EOF;
     unsigned int row = 0;
-    unsigned int col = 0;
 
     assert(file != NULL);
     assert(grid != NULL);
 
-    while ((input = FindNextChar(file)) != EOF) {
+    for (row = 0; row < numGridRows; ++row) {
+        unsigned int col = 0;
 
-        switch (input) {
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        {
-            GridSquare* square = GetSquare(grid, row, col);
+        for (col = 0; col < numGridCols; ++col) {
+            int input = EOF;
+            GridSquare* square;
+
+            if (!GetValue(file, &input)) {
+                if (input == EOF) {
+                    printf("ERROR: Unexpected EOF at ");
+                }
+                else {
+                    printf("ERROR: Unexpected '%c' at ", input);
+                }
+
+                printf("row %u, col %u\n", row, col);
+                return false;
+            }
+
+            square = GetSquare(grid, row, col);
             assert(square != NULL);
 
-            square->value = input - '0';
-            break;
-        }
-
-        case ',':
-            if (++col >= numGridCols) return false; /* Too many columns */
-            break;
-
-        case '\n':
-            if ((++row >= numGridRows) ||      /* Too many rows */
-                (col != (numGridCols - 1))     /* Didn't reach end of row */
-                ) return false;
-
-            col = 0;
-            break;
-
-        case '\0':  return false;
+            square->value = input;
         }
     }
 

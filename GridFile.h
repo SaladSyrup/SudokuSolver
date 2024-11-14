@@ -36,31 +36,21 @@
 #include <stdbool.h>
 
 /*
-** Files containing grids should be text files formatted as shown below.
+** Grid files are text files containing a series of square values separated by
+** a comma or a line feed ('\n').
 **
-**      1,2,3,4,5,6,7,8,9
-**      2, ,3, ,5, ,7, ,9
-**      3,2, ,4, ,6, ,8,
-**      4,2,3,4, ,6,7,8,9
-**       , , , , , , , ,
-**      6,2,3,4,5,6,7,8,9
-**      ,,,,,,,,
-**      8,2,3,4,5,6,7,8,9
-**      9,2,3,4,5,6,7,8,9
-**
-**  - Each line is a series of comma separated values corresponding to a single
-**    grid row. Each line must have numGridCols values and (numGridCols - 1)
-**    commas. Unspecified values are considered VALUE_NONE.
-**
-**  - A complete file has numGridRows lines.
+**  - The sudoku grid is filled in row-wise using values from the file. File
+**    reading ends once the grid is filled.
 **
 **  - Values must be in the range of 1 to 9 and shall not be greater than
 **    (numSquareValues - 1). No attempt is made to parse multidigit values.
 **
-**  - Whitespace other than '\n' is ignored. Any character outside the range of
-**    '!' to '~' is considered whitespace.
+**  - A comma without a preceeding value is considered VALUE_NONE.
 **
-**  - File content after the first numGridRows lines is ignored.
+**  - Line feeds without a preceeding value are ignored.
+**
+**  - Whitespace other than '\n' is always ignored. Any character outside the
+**    range of '!' to '~' is considered whitespace.
 */
 
 /*
