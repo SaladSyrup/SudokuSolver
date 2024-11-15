@@ -1,5 +1,5 @@
 /*
-** SudokuSolver.h
+** DFSSolver.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,25 +28,16 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_SOLVER_H
-#define SUDOKU_SOLVER_H
+#ifndef DFSSOLVER_H
+#define DFSSOLVER_H
 
-#include "Grid.h"
-#include "GridFile.h"
-#include "GridPrint.h"
-#include "GridValidate.h"
+#include "SudokuSolver.h"
 
 #include <stdbool.h>
 
 /*
-** Type for Sudoku solver functions.
-**
-** Takes an initialized SudokuGrid as input.
-**
-** Returns true if succesful and updates SudokuGrid with the solution.
-**
-** Returns false if unsuccesful.
+** Solves the Sudoku using a depth-first search.
 */
-typedef bool (*SolverFunction)(SudokuGrid);
+bool DFSSolver(SudokuGrid grid);
 
-#endif // !SUDOKU_SOLVER_H
+#endif // !DFSSOLVER_H
