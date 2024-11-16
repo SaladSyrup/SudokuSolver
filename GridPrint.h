@@ -38,6 +38,6 @@
 **
 ** Assumes values are less than 10 and take up only one character space.
 */
-void PrintGrid(SudokuGrid grid);
+void PrintGrid(Grid grid);
 
 #endif // !GRID_PRINT_H

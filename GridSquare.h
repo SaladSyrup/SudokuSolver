@@ -1,5 +1,5 @@
 /*
-** GridFile.h
+** GridSquare.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,36 +28,25 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef GRID_FILE_H
-#define GRID_FILE_H
+#ifndef GRID_SQUARE_H
+#define GRID_SQUARE_H
 
-#include "Grid.h"
+typedef enum {
+    VALUE_NONE,
+    VALUE_1,
+    VALUE_2,
+    VALUE_3,
+    VALUE_4,
+    VALUE_5,
+    VALUE_6,
+    VALUE_7,
+    VALUE_8,
+    VALUE_9,
+    numSquareValues
+} SquareValue;
 
-#include <stdbool.h>
+typedef struct {
+    SquareValue value;
+} GridSquare;
 
-/*
-** Grid files are text files containing a series of square values separated by
-** a comma or a line feed ('\n').
-**
-**  - The sudoku grid is filled in row-wise using values from the file. File
-**    reading ends once the grid is filled.
-**
-**  - Values must be in the range of 1 to 9 and shall not be greater than
-**    (numSquareValues - 1). No attempt is made to parse multidigit values.
-**
-**  - A comma without a preceeding value is considered VALUE_NONE.
-**
-**  - Line feeds without a preceeding value are ignored.
-**
-**  - Whitespace other than '\n' is always ignored. Any character outside the
-**    range of '!' to '~' is considered whitespace.
-*/
-
-/*
-** Loads grid from file.
-**
-** Returns true if the file successfully loaded.
-*/
-bool LoadGrid(const char filename[], Grid grid);
-
-#endif // !GRID_FILE_H
+#endif // !GRID_SQUARE_H

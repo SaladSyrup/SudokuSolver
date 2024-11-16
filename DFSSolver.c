@@ -32,32 +32,29 @@
 
 #include <assert.h>
 
-static const unsigned int numSquares = numGridRows * numGridCols;
-
-#define GET_GRID_ROW(squareIndex) ((squareIndex) / numGridCols)
-#define GET_GRID_COL(squareIndex) ((squareIndex) % numGridCols)
+#define GET_GRID_ROW(squareIndex, gridOrder) ((squareIndex) / (gridOrder))
+#define GET_GRID_COL(squareIndex, gridOrder) ((squareIndex) % (gridOrder))
 
 /*
 ** Accomplishes the work of the depth first search.
 */
-static bool DFS(SudokuGrid grid, unsigned int sqrDepth)
+static bool DFS(Grid grid, unsigned int sqrDepth, const unsigned int maxDepth)
 {
+    const unsigned int gridOrder = GetGridOrder(grid);
     GridSquare* square = NULL;
     SquareValue testValue = VALUE_1;
 
-    assert(grid != NULL);
-
     /* We've reached the end--time to test if we've found a solution! */
-    if (sqrDepth >= numSquares) {
+    if (sqrDepth >= maxDepth) {
         return (isGridValid(grid) && isGridComplete(grid));
     }
 
-    square = GetSquare(grid, GET_GRID_ROW(sqrDepth), GET_GRID_COL(sqrDepth));
+    square = GetSquare(grid, GET_GRID_ROW(sqrDepth, gridOrder), GET_GRID_COL(sqrDepth, gridOrder));
     assert(square != NULL);
 
     /* If this square already has a value, move to the next one */
     if (square->value != VALUE_NONE) {
-        return DFS(grid, sqrDepth + 1);
+        return DFS(grid, sqrDepth + 1, maxDepth);
     }
 
     /* Otherwise, we need to test each value in turn */
@@ -65,7 +62,7 @@ static bool DFS(SudokuGrid grid, unsigned int sqrDepth)
         square->value = testValue;
 
         /* If grid is valid with testValue, move to next square */
-        if (isGridValid(grid) && DFS(grid, sqrDepth + 1)) return true;
+        if (isGridValid(grid) && DFS(grid, sqrDepth + 1, maxDepth)) return true;
     }
 
     /* No solution available from here with predecessor square values */
@@ -73,7 +70,10 @@ static bool DFS(SudokuGrid grid, unsigned int sqrDepth)
     return false;
 }
 
-bool DFSSolver(SudokuGrid grid)
+bool DFSSolver(Grid grid)
 {
-    return DFS(grid, 0);
+    const unsigned int gridOrder = GetGridOrder(grid);
+    const unsigned int numSquares = gridOrder * gridOrder;
+
+    return DFS(grid, 0, numSquares);
 }

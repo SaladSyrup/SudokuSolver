@@ -31,100 +31,64 @@
 #ifndef GRID_H
 #define GRID_H
 
+#include "GridSquare.h"
+
 #include <stdbool.h>
 
-typedef enum {
-    ROW_0,
-    ROW_1,
-    ROW_2,
-    ROW_3,
-    ROW_4,
-    ROW_5,
-    ROW_6,
-    ROW_7,
-    ROW_8,
-    numGridRows
-} GridRow;
-
-typedef enum {
-    COL_0,
-    COL_1,
-    COL_2,
-    COL_3,
-    COL_4,
-    COL_5,
-    COL_6,
-    COL_7,
-    COL_8,
-    numGridCols
-} GridCol;
-
-typedef enum {
-    VALUE_NONE,
-    VALUE_1,
-    VALUE_2,
-    VALUE_3,
-    VALUE_4,
-    VALUE_5,
-    VALUE_6,
-    VALUE_7,
-    VALUE_8,
-    VALUE_9,
-    numSquareValues
-} SquareValue;
-
-typedef struct {
-    SquareValue value;
-} GridSquare;
-
-typedef struct _SudokuGridType* SudokuGrid;
+typedef struct _GridType* Grid;
 
 /*
-** Creates a blank Sudoku grid. All grid values are initialized to VALUE_NONE.
+** Creates a blank square grid with dimensions gridOrder x gridOrder. All grid
+** values are initialized to VALUE_NONE.
 **
 ** If successful, the grid parameter is updated to point to the newly created
-** Sudoku grid and true is returned.
+** grid and true is returned.
 **
 ** If unsucessful, the grid paramenter is not modified and false is returned.
 */
-bool CreateGrid(SudokuGrid* grid);
+bool CreateGrid(Grid* grid, unsigned int gridOrder);
 
 /*
-** Destroys a Sudoku grid.
+** Destroys a grid.
 */
-void DestroyGrid(SudokuGrid* grid);
+void DestroyGrid(Grid* grid);
+
+/*
+** Returns the grid order. Grids have dimensions of gridOrder x gridOrder;
+** order is the number of rows or columns.
+*/
+unsigned int GetGridOrder(Grid grid);
 
 /*
 ** Returns pointer to an arbitrary square in the grid. Squares are zero indexed
-** from the top left. row and col must be less than numGridRows and
-** numGridCols, respectively.
+** from the top left. row and col must both be less than the grid order.
 **
 ** Returns NULL on error.
 */
-GridSquare* GetSquare(SudokuGrid grid, GridRow row, GridCol col);
+GridSquare* GetSquare(Grid grid, unsigned int row, unsigned int col);
 
 /*
 ** Returns pointer to first (left) grid square in the given row. Rows are zero
-** indexed from the top left. row must be less than numGridRows.
+** indexed from the top left. row must be less than grid order.
 **
 ** Returns NULL on error.
 */
-GridSquare* GetGridRow(SudokuGrid grid, GridRow row);
+GridSquare* GetRow(Grid grid, unsigned int row);
 
 /*
 ** Returns pointer to first (top) grid square in the given column. Columns are
-** zero indexed from the top left. col must be less than numGridCols.
+** zero indexed from the top left. col must be less than grid order.
 **
 ** Returns NULL on error.
 */
-GridSquare* GetGridColumn(SudokuGrid grid, GridCol col);
+GridSquare* GetColumn(Grid grid, unsigned int col);
 
 /*
 ** Increments square to the next column in the same row.
 **
 ** Returns false if the end of the row has been reached or there's an error.
 */
-bool GetNextColumn(SudokuGrid grid, GridSquare** square);
+bool GetNextColumn(Grid grid, GridSquare** square);
 
 /*
 ** Decrements square to the previous column in the same row.
@@ -132,14 +96,14 @@ bool GetNextColumn(SudokuGrid grid, GridSquare** square);
 ** Returns false if the beginning of the row has been reached or there's an
 ** error.
 */
-bool GetPrevColumn(SudokuGrid grid, GridSquare** square);
+bool GetPrevColumn(Grid grid, GridSquare** square);
 
 /*
 ** Increments square to the next row in the same column.
 **
 ** Returns false if the end of the column has been reached or there's an error.
 */
-bool GetNextRow(SudokuGrid grid, GridSquare** square);
+bool GetNextRow(Grid grid, GridSquare** square);
 
 /*
 ** Decrements square to the previous row in the same column.
@@ -147,6 +111,6 @@ bool GetNextRow(SudokuGrid grid, GridSquare** square);
 ** Returns false if the beginning of the column has been reached or there's an
 ** error.
 */
-bool GetPrevRow(SudokuGrid grid, GridSquare** square);
+bool GetPrevRow(Grid grid, GridSquare** square);
 
 #endif // !GRID_H

@@ -50,22 +50,23 @@ static char ValueToChar(SquareValue value)
 }
 
 /* This could probably be cleaner */
-void PrintGrid(SudokuGrid grid)
+void PrintGrid(Grid grid)
 {
     unsigned int row = 0;
-    const unsigned int gridWidth =      numGridCols * 3         /* The value and a single space on either side */
-                                    +   numGridCols + 1;        /* Space for column separators and outer frame */
-    const unsigned int colSpacing = gridWidth / numGridCols;    /* How often to place grid intersections */
+    const unsigned int gridOrder = GetGridOrder(grid);
+    const unsigned int gridWidth =      gridOrder * 3         /* The value and a single space on either side */
+                                    +   gridOrder + 1;        /* Space for column separators and outer frame */
+    const unsigned int colSpacing = gridWidth / gridOrder;    /* How often to place grid intersections */
 
     assert(grid != NULL);
 
-    for (row = 0; row < numGridRows; ++row) {
+    for (row = 0; row < gridOrder; ++row) {
         unsigned int col = gridWidth;
         while ((col-- > 0) && putchar((col % colSpacing == 0) ? '+' : '-'));
         putchar('\n');
 
         putchar('|');
-        for (col = 0; col < numGridCols; ++col) {
+        for (col = 0; col < gridOrder; ++col) {
             GridSquare* square = GetSquare(grid, row, col);
 
             assert(square != NULL);

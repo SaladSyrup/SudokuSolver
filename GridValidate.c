@@ -34,13 +34,13 @@
 #include <assert.h>
 #include <stdio.h>
 
-bool isGridComplete(SudokuGrid grid)
+bool isGridComplete(Grid grid)
 {
     GridSquare* rowHead = NULL;
 
     assert(grid != NULL);
 
-    rowHead = GetGridRow(grid, ROW_0);
+    rowHead = GetRow(grid, ROW_0);
     do {
         GridSquare* square = rowHead;
 
@@ -55,7 +55,7 @@ bool isGridComplete(SudokuGrid grid)
     return true;
 }
 
-static bool isRegionVaild(SudokuGrid grid, const GridRegion region)
+static bool isRegionVaild(Grid grid, const GridRegion region)
 {
     unsigned int locationIndex = 0;
     bool valueFound[numSquareValues] = { false };
@@ -80,7 +80,7 @@ static bool isRegionVaild(SudokuGrid grid, const GridRegion region)
     return true;
 }
 
-bool isGridValid(SudokuGrid grid)
+bool isGridValid(Grid grid)
 {
     unsigned int regionIndex = 0;
 

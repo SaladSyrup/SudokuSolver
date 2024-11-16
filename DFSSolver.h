@@ -38,6 +38,6 @@
 /*
 ** Solves the Sudoku using a depth-first search.
 */
-bool DFSSolver(SudokuGrid grid);
+bool DFSSolver(Grid grid);
 
 #endif // !DFSSOLVER_H

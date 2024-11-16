@@ -34,32 +34,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct _SudokuGridType {
+typedef struct _GridType {
     GridSquare* grid;
-} _SudokuGridType;
+    unsigned int gridOrder;
+} _GridType;
 
-bool CreateGrid(SudokuGrid* grid)
+bool CreateGrid(Grid* grid, unsigned int gridOrder)
 {
-    _SudokuGridType* newGrid = malloc(sizeof(_SudokuGridType));
+    _GridType* newGrid = (_GridType*)malloc(sizeof(_GridType));
 
-    assert(numGridRows == numGridCols);
+    assert(grid != NULL);
+    assert(gridOrder < numSquareValues);
 
     if (newGrid == NULL) return false;
     
-    newGrid->grid = calloc((size_t)numGridRows * (size_t)numGridCols, sizeof(GridSquare));
+    newGrid->gridOrder = gridOrder;
+    newGrid->grid = calloc((size_t)gridOrder * (size_t)gridOrder, sizeof(GridSquare));
     if (newGrid->grid == NULL) {
         DestroyGrid(&newGrid);
         return false;
     }
 
-    *grid = (SudokuGrid)newGrid;
+    *grid = (Grid)newGrid;
     return true;
 }
 
-void DestroyGrid(SudokuGrid* grid)
+void DestroyGrid(Grid* grid)
 {
     if ((grid != NULL) && (*grid !=NULL)) {
-        _SudokuGridType* oldGrid = *grid;
+        _GridType* oldGrid = *grid;
 
         free(oldGrid->grid);
         free(oldGrid);
@@ -68,35 +71,40 @@ void DestroyGrid(SudokuGrid* grid)
     }
 }
 
-GridSquare* GetSquare(SudokuGrid grid, GridRow row, GridCol col)
+unsigned int GetGridOrder(Grid grid)
+{
+    assert(grid != NULL);
+    return grid->gridOrder;
+}
+
+GridSquare* GetSquare(Grid grid, unsigned int row, unsigned int col)
 {
     unsigned int squareIndex = 0;
 
-    if ((row >= numGridRows) || (col >= numGridCols)) return NULL;
+    assert((grid != NULL) && (grid->grid != NULL));
 
-    squareIndex = row * numGridCols + col;
+    if ((row >= grid->gridOrder) || (col >= grid->gridOrder)) return NULL;
 
-    assert(squareIndex < (numGridRows * numGridCols));
-    assert(grid != NULL);
-    assert(grid->grid != NULL);
+    squareIndex = row * grid->gridOrder + col;
+    assert(squareIndex < (grid->gridOrder * grid->gridOrder));
 
     return (GridSquare*)&grid->grid[squareIndex];
 }
 
-GridSquare* GetGridRow(SudokuGrid grid, GridRow row)
+GridSquare* GetRow(Grid grid, unsigned int row)
 {
     return GetSquare(grid, row, 0);
 }
 
-GridSquare* GetGridColumn(SudokuGrid grid, GridCol col)
+GridSquare* GetColumn(Grid grid, unsigned int col)
 {
     return GetSquare(grid, 0, col);
 }
 
-#define GET_GRID_ROW(squareIndex) ((squareIndex) / numGridCols)
-#define GET_GRID_COL(squareIndex) ((squareIndex) % numGridCols)
+#define GET_GRID_ROW(squareIndex, gridOrder) ((squareIndex) / (gridOrder))
+#define GET_GRID_COL(squareIndex, gridOrder) ((squareIndex) % (gridOrder))
 
-bool GetNextColumn(SudokuGrid grid, GridSquare** square)
+bool GetNextColumn(Grid grid, GridSquare** square)
 {
     unsigned int squareIndex = 0;
 
@@ -104,13 +112,13 @@ bool GetNextColumn(SudokuGrid grid, GridSquare** square)
     assert((square != NULL) && (*square != NULL));
 
     squareIndex = (unsigned int)(*square - grid->grid);
-    if (GET_GRID_COL(squareIndex) == (numGridCols - 1)) return false;
+    if (GET_GRID_COL(squareIndex, grid->gridOrder) == (grid->gridOrder - 1)) return false;
 
     ++(*square);
     return true;
 }
 
-bool GetPrevColumn(SudokuGrid grid, GridSquare** square)
+bool GetPrevColumn(Grid grid, GridSquare** square)
 {
     unsigned int squareIndex = 0;
 
@@ -118,13 +126,13 @@ bool GetPrevColumn(SudokuGrid grid, GridSquare** square)
     assert((square != NULL) && (*square != NULL));
 
     squareIndex = (unsigned int)(*square - grid->grid);
-    if (GET_GRID_COL(squareIndex) == 0) return false;
+    if (GET_GRID_COL(squareIndex, grid->gridOrder) == 0) return false;
 
     --(*square);
     return true;
 }
 
-bool GetNextRow(SudokuGrid grid, GridSquare** square)
+bool GetNextRow(Grid grid, GridSquare** square)
 {
     unsigned int squareIndex = 0;
 
@@ -132,13 +140,13 @@ bool GetNextRow(SudokuGrid grid, GridSquare** square)
     assert((square != NULL) && (*square != NULL));
 
     squareIndex = (unsigned int)(*square - grid->grid);
-    if (GET_GRID_ROW(squareIndex) == (numGridRows - 1)) return false;
+    if (GET_GRID_ROW(squareIndex, grid->gridOrder) == (grid->gridOrder - 1)) return false;
 
-    *square += numGridCols;
+    *square += grid->gridOrder;
     return true;
 }
 
-bool GetPrevRow(SudokuGrid grid, GridSquare** square)
+bool GetPrevRow(Grid grid, GridSquare** square)
 {
     unsigned int squareIndex = 0;
 
@@ -146,8 +154,8 @@ bool GetPrevRow(SudokuGrid grid, GridSquare** square)
     assert((square != NULL) && (*square != NULL));
 
     squareIndex = (unsigned int)(*square - grid->grid);
-    if (GET_GRID_ROW(squareIndex) == 0) return false;
+    if (GET_GRID_ROW(squareIndex, grid->gridOrder) == 0) return false;
 
-    *square -= numGridCols;
+    *square -= grid->gridOrder;
     return true;
 }

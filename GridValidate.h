@@ -40,7 +40,7 @@
 **
 ** Note that a complete grid may be invalid.
 */
-bool isGridComplete(SudokuGrid grid);
+bool isGridComplete(Grid grid);
 
 /*
 ** Returns true if grid squares assigned a value do not violate region
@@ -50,6 +50,6 @@ bool isGridComplete(SudokuGrid grid);
 **
 ** Note that a valid grid may be incomplete.
 */
-bool isGridValid(SudokuGrid grid);
+bool isGridValid(Grid grid);
 
 #endif // !GRID_VALIDATE_H

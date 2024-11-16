@@ -6,11 +6,11 @@
 
 int main()
 {
-    SudokuGrid sudoku = NULL;
+    Grid sudoku = NULL;
     const char sudokuFile[] = "test_sudoku.txt";
     SolverFunction solver = DFSSolver;
 
-    if (!CreateGrid(&sudoku)) {
+    if (!CreateGrid(&sudoku, 9)) {
         DestroyGrid(&sudoku);
         return EXIT_FAILURE;
     }

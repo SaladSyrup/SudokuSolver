@@ -41,12 +41,12 @@
 /*
 ** Type for Sudoku solver functions.
 **
-** Takes an initialized SudokuGrid as input.
+** Takes an initialized Grid as input.
 **
-** Returns true if succesful and updates SudokuGrid with the solution.
+** Returns true if succesful and updates Grid with the solution.
 **
 ** Returns false if unsuccesful.
 */
-typedef bool (*SolverFunction)(SudokuGrid);
+typedef bool (*SolverFunction)(Grid);
 
 #endif // !SUDOKU_SOLVER_H

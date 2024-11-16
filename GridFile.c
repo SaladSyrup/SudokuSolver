@@ -111,19 +111,17 @@ static bool GetValue(FILE* file, int* value)
 
 /*
 ** Helper function to accomplish the actual work of reading a file into the
-** SudokuGrid.
+** Grid.
 */
-static bool ReadGridFile(FILE* file, SudokuGrid grid)
+static bool ReadGridFile(FILE* file, Grid grid)
 {
+    const unsigned int gridOrder = GetGridOrder(grid);
     unsigned int row = 0;
 
-    assert(file != NULL);
-    assert(grid != NULL);
-
-    for (row = 0; row < numGridRows; ++row) {
+    for (row = 0; row < gridOrder; ++row) {
         unsigned int col = 0;
 
-        for (col = 0; col < numGridCols; ++col) {
+        for (col = 0; col < gridOrder; ++col) {
             int input = EOF;
             GridSquare* square;
 
@@ -149,7 +147,7 @@ static bool ReadGridFile(FILE* file, SudokuGrid grid)
     return true;
 }
 
-bool LoadGrid(const char filename[], SudokuGrid grid)
+bool LoadGrid(const char filename[], Grid grid)
 {
     bool success = true;
     FILE* file = fopen(filename, "r");

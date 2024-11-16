@@ -43,6 +43,32 @@
 ** contain numGridCols (or numGridRows) unique squares.
 */
 
+typedef enum {
+    ROW_0 = 0,
+    ROW_1,
+    ROW_2,
+    ROW_3,
+    ROW_4,
+    ROW_5,
+    ROW_6,
+    ROW_7,
+    ROW_8,
+    numGridRows
+} GridRow;
+
+typedef enum {
+    COL_0 = 0,
+    COL_1,
+    COL_2,
+    COL_3,
+    COL_4,
+    COL_5,
+    COL_6,
+    COL_7,
+    COL_8,
+    numGridCols
+} GridCol;
+
 typedef struct {
     GridRow row;
     GridCol col;
