@@ -1,5 +1,5 @@
 /*
-** GridFile.h
+** Constraint.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,36 +28,24 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef GRID_FILE_H
-#define GRID_FILE_H
+#ifndef CONSTRAINT_H
+#define CONSTRAINT_H
 
-#include "Grid.h"
-
-#include <stdbool.h>
-
-/*
-** Grid files are text files containing a series of square values separated by
-** a comma or a line feed ('\n').
-**
-**  - The sudoku grid is filled in row-wise using values from the file. File
-**    reading ends once the grid is filled.
-**
-**  - Values must be in the range of 1 to 9 and shall not be greater than
-**    (numSquareValues - 1). No attempt is made to parse multidigit values.
-**
-**  - A comma without a preceeding value is considered VALUE_NONE.
-**
-**  - Line feeds without a preceeding value are ignored.
-**
-**  - Whitespace other than '\n' is always ignored. Any character outside the
-**    range of '!' to '~' is considered whitespace.
-*/
+#include "Region.h"
+#include "ValidationFunction.h"
 
 /*
-** Loads grid from file.
-**
-** Returns true if the file successfully loaded.
+** A constraint consists of a region and an associated validation function. The
+** constraint is satisfied when the validation function returns true.
 */
-bool LoadGrid(const char filename[], Grid grid);
+typedef struct {
+    Region region;
+    ValidationFunction validationFunc;
+} Constraint;
 
-#endif // !GRID_FILE_H
+typedef struct {
+    Constraint* constraintList;
+    unsigned int numConstraints;
+} Constraints;
+
+#endif // !CONSTRAINT_H

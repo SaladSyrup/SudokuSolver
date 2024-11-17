@@ -1,5 +1,5 @@
 /*
-** SudokuSolver.h
+** ValidationFunction.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,23 +28,19 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_SOLVER_H
-#define SUDOKU_SOLVER_H
+#ifndef VALIDATION_FUNCTION_H
+#define VALIDATION_FUNCTION_H
 
-#include "SudokuPuzzle.h"
-#include "GridValidate.h"
+#include "Grid.h"
+#include "Region.h"
 
 #include <stdbool.h>
 
 /*
-** Type for Sudoku solver functions.
+** Type for constraint validation functions.
 **
-** Takes an initialized Grid as input.
-**
-** Returns true if succesful and updates Grid with the solution.
-**
-** Returns false if unsuccesful.
+** Returns true if the given region of the grid is valid.
 */
-typedef bool (*SolverFunction)(SudokuPuzzle);
+typedef bool (*ValidationFunction)(Grid, Region);
 
-#endif // !SUDOKU_SOLVER_H
+#endif // !VALIDATION_FUNCTION_H

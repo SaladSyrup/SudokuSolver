@@ -1,5 +1,5 @@
 /*
-** SudokuSolver.h
+** Region.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,23 +28,29 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_SOLVER_H
-#define SUDOKU_SOLVER_H
-
-#include "SudokuPuzzle.h"
-#include "GridValidate.h"
-
-#include <stdbool.h>
+#ifndef REGION_H
+#define REGION_H
 
 /*
-** Type for Sudoku solver functions.
-**
-** Takes an initialized Grid as input.
-**
-** Returns true if succesful and updates Grid with the solution.
-**
-** Returns false if unsuccesful.
+** Regions define a group of squares within a grid. Regions may be of any size
+** and grid squares included in the region need not be contiguous.
 */
-typedef bool (*SolverFunction)(SudokuPuzzle);
 
-#endif // !SUDOKU_SOLVER_H
+typedef struct {
+    unsigned int row;
+    unsigned int col;
+} GridLocation;
+
+/*
+** Structure describing a region.
+**
+**  square - Array of GridLocations for each grid square in the region.
+**
+**  regionSize - Number of grid locations in the square array.
+*/
+typedef struct {
+    GridLocation* square;
+    unsigned int regionSize;
+} Region;
+
+#endif // !REGION_H

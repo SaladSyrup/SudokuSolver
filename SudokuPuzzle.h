@@ -1,5 +1,5 @@
 /*
-** SudokuSolver.h
+** SudokuPuzzle.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,23 +28,45 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_SOLVER_H
-#define SUDOKU_SOLVER_H
-
-#include "SudokuPuzzle.h"
-#include "GridValidate.h"
+#ifndef SUDOKU_PUZZLE_H
+#define SUDOKU_PUZZLE_H
 
 #include <stdbool.h>
 
 /*
-** Type for Sudoku solver functions.
+** A Sudoku puzzle consists of a square grid and a set of contraints the
+** solution must satisfy.
 **
-** Takes an initialized Grid as input.
+** In standard Sudoku:
 **
-** Returns true if succesful and updates Grid with the solution.
+**   - The grid is nine-by-nine. Each grid location can be blank (no value) or
+**     a digit 1-9.
 **
-** Returns false if unsuccesful.
+**   - The grid is divided into 27 regions of nine grid locations each: 9 rows,
+**     9 columns, and 9 non-overlapping three-by-three subgrids.
+**
+**   - Each region has the constraint that each of the digits 1-9 may appear
+**     only once within the region.
+**
+** A Sudoku solution is one in which the grid is both complete (no blanks) and
+** valid (each region's constraints are satisfied).
 */
-typedef bool (*SolverFunction)(SudokuPuzzle);
+typedef struct _SudokuPuzzleType* SudokuPuzzle;
 
-#endif // !SUDOKU_SOLVER_H
+/*
+** Creates a new Sudoku puzzle. The puzzle grid is blank and standard
+** constraints are used.
+**
+** If successful, the pzl parameter is updated to point to the newly created
+** puzzle and true is returned.
+**
+** If unsuccessful, the pzl parameter is not modified and false is returned.
+*/
+bool CreateSudoku(SudokuPuzzle* pzl);
+
+/*
+** Destroys the Sudoku puzzle, along with the associated grid and constraints.
+*/
+void DestroySudoku(SudokuPuzzle* pzl);
+
+#endif // !SUDOKU_PUZZLE_H

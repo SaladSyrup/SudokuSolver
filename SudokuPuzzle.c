@@ -1,5 +1,5 @@
 /*
-** GridPrint.h
+** SudokuPuzzle.c
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,16 +28,52 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef GRID_PRINT_H
-#define GRID_PRINT_H
+#include "SudokuPuzzle.h"
 
 #include "Grid.h"
+#include "SudokuConstraints.h"
 
-/*
-** Prints grid to stdout.
-**
-** Assumes values are less than 10 and take up only one character space.
-*/
-void PrintGrid(Grid grid);
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#endif // !GRID_PRINT_H
+enum {
+    SudokuSize = 9
+};
+
+typedef struct _SudokuPuzzleType {
+    Grid grid;
+    Constraints* constraints;
+} _SudokuPuzzleType;
+
+bool CreateSudoku(SudokuPuzzle* pzl)
+{
+    _SudokuPuzzleType* newPuzzle = NULL;
+
+    assert(pzl != NULL);
+
+    newPuzzle = (_SudokuPuzzleType*)malloc(sizeof(_SudokuPuzzleType));
+    if (newPuzzle == NULL) return false;
+
+    /* TODO: Create constraints */
+    if (!CreateGrid(&newPuzzle->grid, SudokuSize)) {
+        DestroySudoku(&newPuzzle);
+        return false;
+    }
+
+    *pzl = (SudokuPuzzle)newPuzzle;
+    return true;
+}
+
+void DestroySudoku(SudokuPuzzle* pzl)
+{
+    if ((pzl != NULL) && (*pzl != NULL)) {
+        _SudokuPuzzleType* oldPuzzle = *pzl;
+
+        DestroyGrid(&oldPuzzle->grid);
+        /* TODO: Destory constraints */
+        free(oldPuzzle);
+
+        *pzl = NULL;
+    }
+}
