@@ -35,26 +35,33 @@
 #define GET_GRID_ROW(squareIndex, gridOrder) ((squareIndex) / (gridOrder))
 #define GET_GRID_COL(squareIndex, gridOrder) ((squareIndex) % (gridOrder))
 
+/* Structure to avoid multiple calls to retrieve same information */
+typedef struct {
+    SudokuPuzzle pzl;
+    Grid grid;
+    unsigned int gridOrder;
+    unsigned int numSquares;
+} PuzzleInfo;
+
 /*
 ** Accomplishes the work of the depth first search.
 */
-static bool DFS(Grid grid, unsigned int sqrDepth, const unsigned int maxDepth)
+static bool DFS(const PuzzleInfo* const pzlInfo, const unsigned int sqrDepth)
 {
-    const unsigned int gridOrder = GetGridOrder(grid);
     GridSquare* square = NULL;
     SquareValue testValue = VALUE_1;
 
     /* We've reached the end--time to test if we've found a solution! */
-    if (sqrDepth >= maxDepth) {
-        return (isGridValid(grid) && isGridComplete(grid));
+    if (sqrDepth >= pzlInfo->numSquares) {
+        return (isSudokuValid(pzlInfo->pzl) && isSudokuComplete(pzlInfo->pzl));
     }
 
-    square = GetSquare(grid, GET_GRID_ROW(sqrDepth, gridOrder), GET_GRID_COL(sqrDepth, gridOrder));
+    square = GetSquare(pzlInfo->grid, GET_GRID_ROW(sqrDepth, pzlInfo->gridOrder), GET_GRID_COL(sqrDepth, pzlInfo->gridOrder));
     assert(square != NULL);
 
     /* If this square already has a value, move to the next one */
     if (square->value != VALUE_NONE) {
-        return DFS(grid, sqrDepth + 1, maxDepth);
+        return DFS(pzlInfo, sqrDepth + 1);
     }
 
     /* Otherwise, we need to test each value in turn */
@@ -62,7 +69,7 @@ static bool DFS(Grid grid, unsigned int sqrDepth, const unsigned int maxDepth)
         square->value = testValue;
 
         /* If grid is valid with testValue, move to next square */
-        if (isGridValid(grid) && DFS(grid, sqrDepth + 1, maxDepth)) return true;
+        if (isSudokuValid(pzlInfo->pzl) && DFS(pzlInfo, sqrDepth + 1)) return true;
     }
 
     /* No solution available from here with predecessor square values */
@@ -70,10 +77,14 @@ static bool DFS(Grid grid, unsigned int sqrDepth, const unsigned int maxDepth)
     return false;
 }
 
-bool DFSSolver(Grid grid)
+bool DFSSolver(SudokuPuzzle pzl)
 {
-    const unsigned int gridOrder = GetGridOrder(grid);
-    const unsigned int numSquares = gridOrder * gridOrder;
+    PuzzleInfo pzlInfo = { NULL };
 
-    return DFS(grid, 0, numSquares);
+    pzlInfo.pzl = pzl;
+    pzlInfo.grid = GetGrid(pzl);
+    pzlInfo.gridOrder = GetGridOrder(pzlInfo.grid);
+    pzlInfo.numSquares = pzlInfo.gridOrder * pzlInfo.gridOrder;
+
+    return DFS(&pzlInfo, 0);
 }

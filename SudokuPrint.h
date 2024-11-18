@@ -1,5 +1,5 @@
 /*
-** SudokuSolver.h
+** SudokuPrint.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,22 +28,14 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_SOLVER_H
-#define SUDOKU_SOLVER_H
+#ifndef SUDOKU_PRINT_H
+#define SUDOKU_PRINT_H
 
 #include "SudokuPuzzle.h"
 
-#include <stdbool.h>
-
 /*
-** Type for Sudoku solver functions.
-**
-** Takes an initialized SudokuPuzzle as input.
-**
-** Returns true if succesful and updates Sudoku grid with the solution.
-**
-** Returns false if unsuccesful.
+** Prints Sudoku to stdout.
 */
-typedef bool (*SolverFunction)(SudokuPuzzle);
+void PrintSudoku(SudokuPuzzle pzl);
 
-#endif // !SUDOKU_SOLVER_H
+#endif // !SUDOKU_PRINT_H

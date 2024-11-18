@@ -1,5 +1,5 @@
 /*
-** SudokuSolver.h
+** SudokuFile.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,22 +28,36 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_SOLVER_H
-#define SUDOKU_SOLVER_H
+#ifndef SUDOKU_FILE_H
+#define SUDOKU_FILE_H
 
 #include "SudokuPuzzle.h"
 
 #include <stdbool.h>
 
 /*
-** Type for Sudoku solver functions.
+** Sudoku files are text files containing a series of square values separated
+** by a comma or a line feed ('\n').
 **
-** Takes an initialized SudokuPuzzle as input.
+**  - The sudoku grid is filled in row-wise using values from the file. File
+**    reading ends once the grid is filled.
 **
-** Returns true if succesful and updates Sudoku grid with the solution.
+**  - Values must be in the range of 1 to 9. No attempt is made to parse
+**    multidigit values.
 **
-** Returns false if unsuccesful.
+**  - A comma without a preceeding value is considered VALUE_NONE.
+**
+**  - Line feeds without a preceeding value are ignored.
+**
+**  - Whitespace other than '\n' is always ignored. Any character outside the
+**    range of '!' to '~' is considered whitespace.
 */
-typedef bool (*SolverFunction)(SudokuPuzzle);
 
-#endif // !SUDOKU_SOLVER_H
+/*
+** Loads Sudoku from file.
+**
+** Returns true if the file successfully loaded.
+*/
+bool LoadSudoku(const char filename[], SudokuPuzzle pzl);
+
+#endif // !SUDOKU_FILE_H
