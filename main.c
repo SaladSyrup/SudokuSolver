@@ -31,10 +31,9 @@ int main()
     //}
 
     //PrintGrid(sudoku);
-    //printf("\nGrid %s complete.\n", isGridComplete(sudoku) ? "IS" : "IS NOT");
-    //printf("Grid %s valid.\n\n", isGridValid(sudoku) ? "IS" : "IS NOT");
-    //
-    
+    printf("\nSudoku %s complete.\n", isSudokuComplete(sudoku) ? "IS" : "IS NOT");
+    printf("Sudoku %s valid.\n\n", isSudokuValid(sudoku) ? "IS" : "IS NOT");
+
     DestroySudoku(&sudoku);
 
     return EXIT_SUCCESS;

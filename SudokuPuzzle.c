@@ -29,21 +29,22 @@
 */
 
 #include "SudokuPuzzle.h"
-
-#include "Grid.h"
 #include "SudokuConstraints.h"
 
 #include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 enum {
     SudokuSize = 9
 };
 
+/*
+** gridComplete is a constraint to determine if all values are filled in.
+*/
 typedef struct _SudokuPuzzleType {
     Grid grid;
-    Constraints* constraints;
+    ConstraintList* uniqueValue;
+    ConstraintList* gridComplete;
 } _SudokuPuzzleType;
 
 bool CreateSudoku(SudokuPuzzle* pzl)
@@ -55,11 +56,13 @@ bool CreateSudoku(SudokuPuzzle* pzl)
     newPuzzle = (_SudokuPuzzleType*)malloc(sizeof(_SudokuPuzzleType));
     if (newPuzzle == NULL) return false;
 
-    /* TODO: Create constraints */
     if (!CreateGrid(&newPuzzle->grid, SudokuSize)) {
         DestroySudoku(&newPuzzle);
         return false;
     }
+
+    newPuzzle->uniqueValue = &uniqueValueConstraints;
+    newPuzzle->gridComplete = &gridCompleteConstraints;
 
     *pzl = (SudokuPuzzle)newPuzzle;
     return true;
@@ -71,9 +74,29 @@ void DestroySudoku(SudokuPuzzle* pzl)
         _SudokuPuzzleType* oldPuzzle = *pzl;
 
         DestroyGrid(&oldPuzzle->grid);
-        /* TODO: Destory constraints */
         free(oldPuzzle);
 
         *pzl = NULL;
     }
+}
+
+Grid GetGrid(SudokuPuzzle pzl)
+{
+    assert(pzl != NULL);
+
+    return pzl->grid;
+}
+
+bool isSudokuComplete(SudokuPuzzle pzl)
+{
+    assert(pzl != NULL);
+
+    return ConstraintsMet(pzl->gridComplete, pzl->grid);
+}
+
+bool isSudokuValid(SudokuPuzzle pzl)
+{
+    assert(pzl != NULL);
+
+    return ConstraintsMet(pzl->uniqueValue, pzl->grid);
 }

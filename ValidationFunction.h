@@ -41,6 +41,6 @@
 **
 ** Returns true if the given region of the grid is valid.
 */
-typedef bool (*ValidationFunction)(Grid, Region);
+typedef bool (*ValidationFunction)(Grid, Region*);
 
 #endif // !VALIDATION_FUNCTION_H

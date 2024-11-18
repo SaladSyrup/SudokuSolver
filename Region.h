@@ -49,7 +49,7 @@ typedef struct {
 **  regionSize - Number of grid locations in the square array.
 */
 typedef struct {
-    GridLocation* square;
+    GridLocation* locations;
     unsigned int regionSize;
 } Region;
 

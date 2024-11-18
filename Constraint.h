@@ -31,8 +31,11 @@
 #ifndef CONSTRAINT_H
 #define CONSTRAINT_H
 
+#include "Grid.h"
 #include "Region.h"
 #include "ValidationFunction.h"
+
+#include <stdbool.h>
 
 /*
 ** A constraint consists of a region and an associated validation function. The
@@ -44,8 +47,15 @@ typedef struct {
 } Constraint;
 
 typedef struct {
-    Constraint* constraintList;
+    Constraint* constraints;
     unsigned int numConstraints;
-} Constraints;
+} ConstraintList;
+
+/*
+** Evaluates each constraint in the constraint list against the given grid.
+** Returns true if all constraints are satisfied (i.e. the validation function
+** returns true).
+*/
+bool ConstraintsMet(ConstraintList* list, Grid grid);
 
 #endif // !CONSTRAINT_H

@@ -31,6 +31,8 @@
 #ifndef SUDOKU_PUZZLE_H
 #define SUDOKU_PUZZLE_H
 
+#include "Grid.h"
+
 #include <stdbool.h>
 
 /*
@@ -68,5 +70,27 @@ bool CreateSudoku(SudokuPuzzle* pzl);
 ** Destroys the Sudoku puzzle, along with the associated grid and constraints.
 */
 void DestroySudoku(SudokuPuzzle* pzl);
+
+/*
+** Returns the underlying grid.
+*/
+Grid GetGrid(SudokuPuzzle pzl);
+
+/*
+** Returns true if all squares have been assigned a value.
+**
+** Note that a complete grid may be invalid.
+*/
+bool isSudokuComplete(SudokuPuzzle pzl);
+
+/*
+** Returns true if grid squares assigned a value do not violate region
+** constraints.
+**
+** Uses regionList defined in GridRegion.h.
+**
+** Note that a valid grid may be incomplete.
+*/
+bool isSudokuValid(SudokuPuzzle pzl);
 
 #endif // !SUDOKU_PUZZLE_H

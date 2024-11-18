@@ -1,5 +1,5 @@
 /*
-** GridValidate.h
+** Constraint.c
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,28 +28,23 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef GRID_VALIDATE_H
-#define GRID_VALIDATE_H
+#include "Constraint.h"
 
-#include "Grid.h"
+#include <assert.h>
+#include <stddef.h>
 
-#include <stdbool.h>
+bool ConstraintsMet(ConstraintList* list, Grid grid)
+{
+    unsigned int index = 0;
 
-/*
-** Returns true if all squares have been assigned a value.
-**
-** Note that a complete grid may be invalid.
-*/
-bool isGridComplete(Grid grid);
+    assert(list != NULL);
 
-/*
-** Returns true if grid squares assigned a value do not violate region
-** constraints.
-**
-** Uses regionList defined in GridRegion.h.
-**
-** Note that a valid grid may be incomplete.
-*/
-bool isGridValid(Grid grid);
+    for (index = 0; index < list->numConstraints; ++index) {
+        Constraint* constraint = &list->constraints[index];
+        ValidationFunction isRegionValid = constraint->validationFunc;
 
-#endif // !GRID_VALIDATE_H
+        if (!isRegionValid(grid, &constraint->region)) return false;
+    }
+
+    return true;
+}
