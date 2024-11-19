@@ -44,7 +44,6 @@ bool CreateGrid(Grid* grid, unsigned int gridOrder)
     _GridType* newGrid = (_GridType*)malloc(sizeof(_GridType));
 
     assert(grid != NULL);
-    assert(gridOrder < numSquareValues);
 
     if (newGrid == NULL) return false;
     
