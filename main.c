@@ -26,8 +26,17 @@ typedef struct {
 } SolverTest;
 
 SolverTest TEST_LIST[] = {
-    /*  SolverFunction  name            testFile            numTries        stats    */
-    {   DFSSolver,      "DFSSolver",    "test_sudoku.txt",  10,             {   0   }   },
+    /*  SolverFunction  name            testFile                            numTries        stats    */
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\original_sudoku.txt",  10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\test_sudoku.txt",      10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\one_star.txt",         10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\two_star.txt",         10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\three_star.txt",       10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\four_star.txt",        10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\five_star.txt",        10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\super.txt",            10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\extreme.txt",          10,             {   0   }   },
+    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\blank.txt",            10,             {   0   }   },
 };
 
 unsigned int NUM_TESTS = sizeof(TEST_LIST) / sizeof(TEST_LIST[0]);
@@ -42,7 +51,7 @@ unsigned int NUM_TESTS = sizeof(TEST_LIST) / sizeof(TEST_LIST[0]);
 /*
 ** Runs individual test and calculates stats
 */
-static void RunTest(SolverTest* test)
+bool RunTest(SolverTest* test)
 {
     unsigned int testNum = 0;
     SolverStats* stats = { 0 };
@@ -78,6 +87,7 @@ static void RunTest(SolverTest* test)
                 stats->solveTime_avg += solveTime;  /* Accumulate total time until the end */
             }
         }
+        else return false;
 
         DestroySudoku(&pzl);
     }
@@ -86,6 +96,8 @@ static void RunTest(SolverTest* test)
     if (stats->solved > 0) {
         stats->solveTime_avg = (stats->solveTime_avg * 10 + 5) / 10 / stats->solved;
     }
+
+    return true;
 }
 
 /*
@@ -99,19 +111,20 @@ static void TestSolvers(SolverTest* tests, unsigned int numTests)
     assert(numTests > 0);
 
     for (index = 0; index < numTests; ++index) {
-        printf("Testing solver %s %u times...", tests[index].name, tests[index].numTries);
+        printf("Testing solver %s %u times against puzzle %s...", tests[index].name, tests[index].numTries, tests[index].testFile);
         RunTest(&tests[index]);
         printf("done\n");
     }
 
     putchar('\n');
-    printf("Solver                  Solved     Average time     Minimum time     Maximum time\n");
-    printf("---------------------------------------------------------------------------------\n");
+    printf("Solver            Solved      Average time      Minimum time      Maximum time      Puzzle\n");
+    printf("------------------------------------------------------------------------------------------\n");
     for (index = 0; index < numTests; ++index) {
         const double ave = tests[index].stats.solveTime_avg / (double)CLOCKS_PER_SEC;
         const double min = tests[index].stats.solveTime_min / (double)CLOCKS_PER_SEC;
         const double max = tests[index].stats.solveTime_max / (double)CLOCKS_PER_SEC;
-        printf("%-22s  %6u    %9.3f sec    %9.3f sec    %9.3f sec\n", tests[index].name, tests[index].stats.solved, ave, min, max);
+        printf("%-16s  %6u    %10.3f sec    %10.3f sec    %10.3f sec      %s\n", 
+            tests[index].name, tests[index].stats.solved, ave, min, max, tests[index].testFile);
     }
 }
 
@@ -150,7 +163,7 @@ static void ShowSolutions(SolverTest* tests, unsigned int numTests)
         }
 
         DestroySudoku(&pzl);
-        printf("\n---------------------------------------------------------------------------------\n");
+        printf("------------------------------------------------------------------------------------------\n");
     }
 }
 
@@ -158,7 +171,7 @@ int main()
 {
     /* Define RUN_TESTS to run solvers and accumulate runtime statistics */
     /* Define SOLUTIONS to run each solver and show the solution */
-//#define RUN_TESTS
+#define RUN_TESTS
 #define SOLUTIONS
 
 #ifdef SOLUTIONS
