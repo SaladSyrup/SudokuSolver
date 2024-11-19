@@ -87,8 +87,6 @@ bool isSudokuComplete(SudokuPuzzle pzl);
 ** Returns true if grid squares assigned a value do not violate region
 ** constraints.
 **
-** Uses regionList defined in GridRegion.h.
-**
 ** Note that a valid grid may be incomplete.
 */
 bool isSudokuValid(SudokuPuzzle pzl);
