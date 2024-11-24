@@ -43,7 +43,9 @@ typedef enum {
     VALUE_8,
     VALUE_9,
     numSquareValues
-} SquareValue;
+};
+
+typedef unsigned int SquareValue;
 
 typedef struct {
     SquareValue value;

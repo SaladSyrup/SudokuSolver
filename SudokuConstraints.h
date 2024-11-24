@@ -34,6 +34,5 @@
 #include "Constraint.h"
 
 ConstraintList uniqueValueConstraints;
-ConstraintList gridCompleteConstraints;
 
 #endif // !SUDOKU_CONSTRAINTS_H

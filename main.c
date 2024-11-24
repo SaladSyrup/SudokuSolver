@@ -52,7 +52,6 @@ typedef struct {
     const char* testFile;
     unsigned int numTries;
     SolverStats stats;
-    
 } SolverTest;
 
 SolverTest TEST_LIST[] = {

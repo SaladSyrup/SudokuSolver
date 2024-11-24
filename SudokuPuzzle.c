@@ -38,13 +38,9 @@ enum {
     SudokuSize = 9
 };
 
-/*
-** gridComplete is a constraint to determine if all values are filled in.
-*/
 typedef struct _SudokuPuzzleType {
     Grid grid;
     ConstraintList* uniqueValue;
-    ConstraintList* gridComplete;
 } _SudokuPuzzleType;
 
 bool CreateSudoku(SudokuPuzzle* pzl)
@@ -62,8 +58,7 @@ bool CreateSudoku(SudokuPuzzle* pzl)
     }
 
     newPuzzle->uniqueValue = &uniqueValueConstraints;
-    newPuzzle->gridComplete = &gridCompleteConstraints;
-
+    
     *pzl = (SudokuPuzzle)newPuzzle;
     return true;
 }
@@ -89,9 +84,19 @@ Grid GetGrid(SudokuPuzzle pzl)
 
 bool isSudokuComplete(SudokuPuzzle pzl)
 {
+    GridSquare* rowHead = NULL;
     assert(pzl != NULL);
 
-    return ConstraintsMet(pzl->gridComplete, pzl->grid);
+    rowHead = GetRow(pzl->grid, 0);
+    do {
+        GridSquare* sqr = rowHead;
+
+        do {
+            if (sqr->value == VALUE_NONE) return false;
+        } while (GetNextColumn(pzl->grid, &sqr));
+    } while (GetNextRow(pzl->grid, &rowHead));
+
+    return true;
 }
 
 bool isSudokuValid(SudokuPuzzle pzl)
