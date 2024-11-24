@@ -45,9 +45,9 @@
 **  - Values must be in the range of 1 to 9. No attempt is made to parse
 **    multidigit values.
 **
-**  - A comma without a preceeding value is considered VALUE_NONE.
+**  - A comma without a preceding value is considered VALUE_NONE.
 **
-**  - Line feeds without a preceeding value are ignored.
+**  - Line feeds without a preceding value are ignored.
 **
 **  - Whitespace other than '\n' is always ignored. Any character outside the
 **    range of '!' to '~' is considered whitespace.
@@ -58,6 +58,6 @@
 **
 ** Returns true if the file successfully loaded.
 */
-bool LoadSudoku(const char filename[], SudokuPuzzle pzl);
+bool LoadSudoku(SudokuPuzzle pzl, const char* filename);
 
 #endif // !SUDOKU_FILE_H

@@ -98,7 +98,7 @@ bool RunTest(SolverTest* test)
         SudokuPuzzle pzl = NULL;
         SolverFunction solverFunc = test->solver;
 
-        if (CreateSudoku(&pzl) && LoadSudoku(test->testFile, pzl)) {
+        if (CreateSudoku(&pzl) && LoadSudoku(pzl, test->testFile)) {
             clock_t startTime = 0;
             clock_t stopTime = 0;
             bool solved = false;
@@ -173,7 +173,7 @@ static void ShowSolutions(SolverTest* tests, unsigned int numTests)
         SudokuPuzzle pzl = NULL;
         SolverFunction solverFunc = tests[index].solver;
 
-        if (CreateSudoku(&pzl) && LoadSudoku(tests[index].testFile, pzl)) {
+        if (CreateSudoku(&pzl) && LoadSudoku(pzl, tests[index].testFile)) {
 
             printf("\nInitial Sudoku:\n");
             PrintSudoku(pzl);

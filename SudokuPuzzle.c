@@ -92,6 +92,7 @@ bool isSudokuComplete(SudokuPuzzle pzl)
         GridSquare* sqr = rowHead;
 
         do {
+            assert(sqr != NULL);
             if (sqr->value == VALUE_NONE) return false;
         } while (GetNextColumn(pzl->grid, &sqr));
     } while (GetNextRow(pzl->grid, &rowHead));

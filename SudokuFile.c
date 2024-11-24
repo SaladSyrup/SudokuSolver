@@ -148,7 +148,7 @@ static bool ReadSudokuFile(FILE* file, SudokuPuzzle pzl)
     return true;
 }
 
-bool LoadSudoku(const char filename[], SudokuPuzzle pzl)
+bool LoadSudoku(SudokuPuzzle pzl, const char* filename)
 {
     bool success = true;
     FILE* file = fopen(filename, "r");
