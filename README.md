@@ -74,4 +74,4 @@ typedef bool (*SolverFunction)(SudokuPuzzle)
 
 `SolverFunction` is used to ease testing multiple solvers against multiple puzzles (see `TEST_LIST[]` in `main.c`).
 
-`DFSSolver` is currently the only solver. It is a depth-first search.
+`BacktrackSolver` is currently the only solver. It is a backtracking search.

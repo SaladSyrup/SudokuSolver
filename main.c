@@ -31,7 +31,7 @@
 #include "SudokuPuzzle.h"
 #include "SudokuFile.h"
 #include "SudokuPrint.h"
-#include "DFSSolver.h"
+#include "solvers\BacktrackSolver.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -56,16 +56,16 @@ typedef struct {
 
 SolverTest TEST_LIST[] = {
     /*  SolverFunction  name            testFile                            numTries        stats    */
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\original_sudoku.txt",  10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\test_sudoku.txt",      10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\one_star.txt",         10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\two_star.txt",         10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\three_star.txt",       10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\four_star.txt",        10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\five_star.txt",        10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\super.txt",            10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\extreme.txt",          10,             {   0   }   },
-    {   DFSSolver,      "DFSSolver",    ".\\sudokus\\blank.txt",            10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\original_sudoku.txt",  10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\test_sudoku.txt",      10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\one_star.txt",         10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\two_star.txt",         10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\three_star.txt",       10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\four_star.txt",        10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\five_star.txt",        10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\super.txt",            10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\extreme.txt",          10,             {   0   }   },
+    {   BacktrackSolver,      "BacktrackSolver",    ".\\sudokus\\blank.txt",            10,             {   0   }   },
 };
 
 unsigned int NUM_TESTS = sizeof(TEST_LIST) / sizeof(TEST_LIST[0]);

@@ -1,5 +1,5 @@
 /*
-** DFSSolver.h
+** BacktrackSolver.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,16 +28,16 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef DFSSOLVER_H
-#define DFSSOLVER_H
+#ifndef BACKTRACKSOLVER_H
+#define BACKTRACKSOLVER_H
 
-#include "SudokuSolver.h"
+#include "..\SudokuSolver.h"
 
 #include <stdbool.h>
 
 /*
 ** Solves the Sudoku using a depth-first search.
 */
-bool DFSSolver(SudokuPuzzle pzl);
+bool BacktrackSolver(SudokuPuzzle pzl);
 
-#endif // !DFSSOLVER_H
+#endif // !BACKTRACKSOLVER_H
