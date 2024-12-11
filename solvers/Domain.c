@@ -32,64 +32,49 @@
 
 #include <assert.h>
 
-typedef Domain BitMask;
-
-enum {
-    NUM_ELEMENTS = MAX_ELEMENT_VALUE - MIN_ELEMENT_VALUE + 1,
-};
-
-enum {
-    EMPTY_DOMAIN = 0x0,
-    FULL_DOMAIN = ~(~0x0 << NUM_ELEMENTS),
-};
-
 bool AddElement(Domain* domain, const ElementValue element) {
-    const BitMask bitMask = 0x1 << (element - MIN_ELEMENT_VALUE);
+    const BitField bitMask = 0x1 << (element - domain->minValue);
 
-    assert((element >= MIN_ELEMENT_VALUE) && (element <= MAX_ELEMENT_VALUE));
+    assert((element >= domain->minValue) && (element < (domain->minValue + domain->numElements)));
 
-    if (*domain & bitMask) return false;    /* Element is already in the domain */
+    if (domain->domain & bitMask) return false;    /* Element is already in the domain */
 
-    *domain |= bitMask;
+    domain->domain |= bitMask;
     return true;
 }
 
 bool RemoveElement(Domain* domain, const ElementValue element) {
-    const BitMask bitMask = 0x1 << (element - MIN_ELEMENT_VALUE);
+    const BitField bitMask = 0x1 << (element - domain->minValue);
 
-    assert((element >= MIN_ELEMENT_VALUE) && (element <= MAX_ELEMENT_VALUE));
+    assert((element >= domain->minValue) && (element < (domain->minValue + domain->numElements)));
 
-    if (!(*domain & bitMask)) return false;     /* Element is not in the domain */
+    if (!(domain->domain & bitMask)) return false;     /* Element is not in the domain */
 
-    *domain &= ~bitMask;
+    domain->domain &= ~bitMask;
     return true;
 }
 
-Domain FullDomain() {
-    return FULL_DOMAIN;
-}
-
-Domain EmptyDomain() {
-    return EMPTY_DOMAIN;
-}
-
 unsigned int NumElements(const Domain domain) {
-    BitMask bitMask = 0x1 << NUM_ELEMENTS;
+    BitField bitMask = 0x1 << domain.numElements;
     unsigned int numElements = 0;
 
     do {
-        if (domain & bitMask) ++numElements;
+        if (domain.domain & bitMask) ++numElements;
     } while ((bitMask >>= 1) > 0);
 
     return numElements;
 }
 
 bool IsEmptyDomain(const Domain domain) {
-    return (domain == EMPTY_DOMAIN);
+    const BitField emptyField = ((BitField)(~0x0) << domain.numElements);
+
+    return ((domain.domain | emptyField) ==  emptyField);
 }
 
 bool IsFullDomain(const Domain domain) {
-    return (domain == FULL_DOMAIN);
+    const BitField fullField = ~((BitField)(~0x0) << domain.numElements);
+
+    return ((domain.domain & fullField) ==  fullField);
 }
 
 bool IsSingletonDomain(const Domain domain) {
@@ -97,17 +82,35 @@ bool IsSingletonDomain(const Domain domain) {
 }
 
 bool ContainsElement(const Domain domain, const ElementValue element) {
-    const BitMask bitMask = 0x1 << (element - MIN_ELEMENT_VALUE);
+    const BitField bitMask = 0x1 << (element - domain.minValue);
 
-    assert((element >= MIN_ELEMENT_VALUE) && (element <= MAX_ELEMENT_VALUE));
+    assert((element >= domain.minValue) && (element < (domain.minValue + domain.numElements)));
 
-    return (domain & bitMask);
+    return (domain.domain & bitMask);
 }
 
 Domain Union(const Domain a, const Domain b) {
-    return (a | b);
+    Domain newDomain = { 0 };
+
+    assert(a.minValue == b.minValue);
+    assert(a.numElements == b.numElements);
+
+    newDomain.domain = a.domain | b.domain;
+    newDomain.minValue = a.minValue;
+    newDomain.numElements = a.numElements;
+
+    return newDomain;
 }
 
 Domain Intersection(const Domain a, const Domain b) {
-    return (a & b);
+    Domain newDomain = { 0 };
+
+    assert(a.minValue == b.minValue);
+    assert(a.numElements == b.numElements);
+
+    newDomain.domain = a.domain & b.domain;
+    newDomain.minValue = a.minValue;
+    newDomain.numElements = a.numElements;
+
+    return newDomain;
 }

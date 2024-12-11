@@ -31,19 +31,26 @@
 #ifndef DOMAIN_H
 #define DOMAIN_H
 
+/*
+** Maintains a set of integer values within a bitfield. Allowable element
+** values are all integers between minValue and (minValue + numElements - 1).
+*/
+
 #include <stdbool.h>
 
-typedef unsigned short Domain;
+/* The number of bits in BitField must be >= numElements */
+typedef unsigned short BitField;
 typedef unsigned int ElementValue;
 
-enum {
-    MIN_ELEMENT_VALUE = 1,
-    MAX_ELEMENT_VALUE = 9
-};
+typedef struct {
+    BitField domain;
+    ElementValue minValue;
+    ElementValue numElements;
+} Domain;
 
 /*
 ** Adds or removes an element from the domain. Behavior is undefined if element
-** is outside the range MIN_ELEMENT_VALUE to MAX_ELEMENT_VALUE.
+** is outside the range minValue to (minValue + numElements - 1).
 **
 ** Returns true if domain was updated or false if domain was not updated. In
 ** other words:
@@ -56,15 +63,9 @@ bool RemoveElement(Domain* domain, const ElementValue element);
 
 /*
 ** Returns true if domain contains element. Behavior is undefined if element is
-** outside the range MIN_ELEMENT_VALUE to MAX_ELEMENT_VALUE,
+** outside the range minValue to (minValue + numElements - 1).
 */
 bool ContainsElement(const Domain domain, const ElementValue element);
-
-/*
-** Returns empty or full domain.
-*/
-Domain FullDomain();
-Domain EmptyDomain();
 
 /*
 ** Functions for determining number of elements.
@@ -75,7 +76,8 @@ bool IsFullDomain(const Domain domain);
 bool IsSingletonDomain(const Domain domain);
 
 /*
-** Domain operations
+** Domain operations. Behavior is undefined if both domains do not have the
+** same minValue and numElements.
 */
 Domain Union(const Domain a, const Domain b);
 Domain Intersection(const Domain a, const Domain b);
