@@ -35,6 +35,7 @@
 bool AddElement(Domain* domain, const ElementValue element) {
     const BitField bitMask = 0x1 << (element - domain->minValue);
 
+    assert((sizeof(BitField) * 8) >= domain->numElements);
     assert((element >= domain->minValue) && (element < (domain->minValue + domain->numElements)));
 
     if (domain->domain & bitMask) return false;    /* Element is already in the domain */
@@ -46,6 +47,7 @@ bool AddElement(Domain* domain, const ElementValue element) {
 bool RemoveElement(Domain* domain, const ElementValue element) {
     const BitField bitMask = 0x1 << (element - domain->minValue);
 
+    assert((sizeof(BitField) * 8) >= domain->numElements);
     assert((element >= domain->minValue) && (element < (domain->minValue + domain->numElements)));
 
     if (!(domain->domain & bitMask)) return false;     /* Element is not in the domain */
@@ -55,8 +57,10 @@ bool RemoveElement(Domain* domain, const ElementValue element) {
 }
 
 unsigned int NumElements(const Domain domain) {
-    BitField bitMask = 0x1 << domain.numElements;
+    BitField bitMask = 0x1 << (domain.numElements - 1);
     unsigned int numElements = 0;
+
+    assert((sizeof(BitField) * 8) >= domain.numElements);
 
     do {
         if (domain.domain & bitMask) ++numElements;
@@ -68,11 +72,15 @@ unsigned int NumElements(const Domain domain) {
 bool IsEmptyDomain(const Domain domain) {
     const BitField emptyField = ((BitField)(~0x0) << domain.numElements);
 
+    assert((sizeof(BitField) * 8) >= domain.numElements);
+
     return ((domain.domain | emptyField) ==  emptyField);
 }
 
 bool IsFullDomain(const Domain domain) {
     const BitField fullField = ~((BitField)(~0x0) << domain.numElements);
+
+    assert((sizeof(BitField) * 8) >= domain.numElements);
 
     return ((domain.domain & fullField) ==  fullField);
 }
@@ -84,6 +92,7 @@ bool IsSingletonDomain(const Domain domain) {
 bool ContainsElement(const Domain domain, const ElementValue element) {
     const BitField bitMask = 0x1 << (element - domain.minValue);
 
+    assert((sizeof(BitField) * 8) >= domain.numElements);
     assert((element >= domain.minValue) && (element < (domain.minValue + domain.numElements)));
 
     return (domain.domain & bitMask);
