@@ -31,7 +31,7 @@
 #include "SudokuPuzzle.h"
 #include "SudokuFile.h"
 #include "SudokuPrint.h"
-#include "solvers\BacktrackSolver.h"
+#include "BacktrackSolver\BacktrackSolver.h"
 
 #include <assert.h>
 #include <stdbool.h>
