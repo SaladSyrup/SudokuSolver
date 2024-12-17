@@ -31,6 +31,10 @@
 #ifndef RBTREE_H
 #define RBTREE_H
 
+/*
+** Implements a red-black tree.
+*/
+
 #include <stdbool.h>
 
 /*****************************************************************************/
@@ -110,16 +114,19 @@ typedef struct {
 bool RBTCreate(RBTree** tree, RBTKeyFunctions keyFuncs);
 
 /*
-** Destroys the red-black tree. Traverses the tree, calling DeleteKey on each
-** key and then destroying the node.
+** Destroys the red-black tree. Traverses the tree, calling
+** RBTKeyFunctions.destroy on each key and then destroying the node.
 */
 void RBTDestroy(RBTree** tree);
 
 /*
 ** Insert key into tree. Returns a pointer to the new node if successful or a
 ** the NIL node if not.
+**
+** If noDuplicates is true and an equal key already exists in the tree,
+** the a pointer to the already existing node will be returned.
 */
-RBTNode* RBTInsert(RBTree* tree, const void* key);
+RBTNode* RBTInsert(RBTree* tree, const void* key, bool noDuplicates);
 
 /*
 ** Delete node from tree.

@@ -362,7 +362,7 @@ static void InsertRebalance(RBTree* tree, RBTNode* node)
     tree->root->color = BLACK;
 }
 
-RBTNode* RBTInsert(RBTree* tree, const void* key)
+RBTNode* RBTInsert(RBTree* tree, const void* key, bool noDuplicates)
 {
     RBTNode* currentNode = NULL;
     RBTNode* prevNode = SentinelLeaf;
@@ -373,6 +373,10 @@ RBTNode* RBTInsert(RBTree* tree, const void* key)
     /* Find where the new node will go */
     currentNode = tree->root;
     while (!IsSentinel(currentNode)) {
+
+        /* Return the equal node if no duplicates allowed */
+        if (noDuplicates && tree->keyFuncs.Equal(key, currentNode->key)) return currentNode;
+
         prevNode = currentNode;
 
         if (tree->keyFuncs.Compare(key, currentNode->key)) {

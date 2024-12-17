@@ -39,13 +39,13 @@
 #include <stdbool.h>
 
 /* The number of bits in BitField must be >= numElements */
-typedef unsigned short BitField;
-typedef unsigned int ElementValue;
+typedef unsigned short DomBitField;
+typedef unsigned int DomElementValue;
 
 typedef struct {
-    BitField domain;
-    ElementValue minValue;
-    ElementValue numElements;
+    DomBitField domain;
+    DomElementValue minValue;
+    DomElementValue numElements;
 } Domain;
 
 /*
@@ -55,31 +55,31 @@ typedef struct {
 ** Returns true if domain was updated or false if domain was not updated. In
 ** other words:
 ** 
-**   - AddElement returns false if element was already in the domain.
-**   - RemoveElement returns false if element was not in the domain.
+**   - DomAddElement returns false if element was already in the domain.
+**   - DomRemoveElement returns false if element was not in the domain.
 */
-bool AddElement(Domain* domain, const ElementValue element);
-bool RemoveElement(Domain* domain, const ElementValue element);
+bool DomAddElement(Domain* domain, const DomElementValue element);
+bool DomRemoveElement(Domain* domain, const DomElementValue element);
 
 /*
 ** Returns true if domain contains element. Behavior is undefined if element is
 ** outside the range minValue to (minValue + numElements - 1).
 */
-bool ContainsElement(const Domain domain, const ElementValue element);
+bool DomContainsElement(const Domain domain, const DomElementValue element);
 
 /*
 ** Functions for determining number of elements.
 */
-unsigned int NumElements(const Domain domain);
-bool IsEmptyDomain(const Domain domain);
-bool IsFullDomain(const Domain domain);
-bool IsSingletonDomain(const Domain domain);
+unsigned int DomNumElements(const Domain domain);
+bool DomIsEmptyDomain(const Domain domain);
+bool DomIsFullDomain(const Domain domain);
+bool DomIsSingletonDomain(const Domain domain);
 
 /*
 ** Domain operations. Behavior is undefined if both domains do not have the
 ** same minValue and numElements.
 */
-Domain Union(const Domain a, const Domain b);
-Domain Intersection(const Domain a, const Domain b);
+Domain DomUnion(const Domain a, const Domain b);
+Domain DomIntersection(const Domain a, const Domain b);
 
 #endif // !DOMAIN_H
