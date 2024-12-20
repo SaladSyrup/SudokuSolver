@@ -35,8 +35,8 @@
 #include <stdlib.h>
 
 static RBTNode NilNodeObject = { NULL, BLACK, NULL, { NULL, NULL } };
-static RBTNode* const NilNode = &NilNodeObject;
 static RBTNode* const SentinelLeaf = &NilNodeObject;
+RBTNode* const RBTNilNode = &NilNodeObject;
 
 #define left children[LEFT]
 #define right children[RIGHT]
@@ -299,7 +299,7 @@ RBTNode* RBTPredecessor(RBTNode* node)
 
 RBTNode* RBTSearch(RBTree* tree, const void* key)
 {
-    RBTNode* node = NilNode;
+    RBTNode* node = RBTNilNode;
 
     assert(tree != NULL);
     node = tree->root;
@@ -319,7 +319,7 @@ RBTNode* RBTSearch(RBTree* tree, const void* key)
 bool RBTIsNil(const RBTNode* node)
 {
     assert(node != NULL);
-    return (node == NilNode);
+    return (node == RBTNilNode);
 }
 
 /*****************************************************************************/

@@ -87,17 +87,21 @@ typedef enum {
     NUM_CHILDREN,
 } RBTDirection;
 
-typedef struct RBTNode {
+typedef struct _RBTNode {
     void* key;
     RBTNodeColor color;
-    struct RBTNode* parent;
-    struct RBTNode* children[NUM_CHILDREN];
+    struct _RBTNode* parent;
+    struct _RBTNode* children[NUM_CHILDREN];
 } RBTNode;
 
 typedef struct {
     RBTNode* root;
     RBTKeyFunctions keyFuncs;
-} RBTree;
+} _RBTreeType;
+
+typedef _RBTreeType RBTree;
+
+extern RBTNode* const RBTNilNode;
 
 /*****************************************************************************/
 /* Prototypes                                                                */
@@ -140,7 +144,8 @@ RBTNode* RBTMin(RBTree* tree);
 RBTNode* RBTMax(RBTree* tree);
 
 /*
-** Return successor and predecessor nodes.
+** Return successor and predecessor nodes. Returns NIL node when end is
+** reached.
 */
 RBTNode* RBTSuccessor(RBTNode* node);
 RBTNode* RBTPredecessor(RBTNode* node);
