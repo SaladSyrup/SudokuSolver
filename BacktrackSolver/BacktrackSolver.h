@@ -36,8 +36,8 @@
 #include <stdbool.h>
 
 /*
-** Solves the Sudoku using a depth-first search.
+** Solves the Sudoku using a backtracking algorithm.
 */
-bool BacktrackSolver(SudokuPuzzle pzl);
+bool BacktrackSolver(SudokuPuzzle* pzl);
 
 #endif // !BACKTRACKSOLVER_H

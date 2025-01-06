@@ -32,6 +32,25 @@
 
 #include <assert.h>
 
+Domain DomNew(const DomElementValue minValue, const DomElementValue numElements, const bool fullDomain)
+{
+    Domain domain = { 0 };
+
+    assert((sizeof(DomBitField) * 8) >= numElements);
+
+    domain.minValue = minValue;
+    domain.numElements = numElements;
+
+    if (fullDomain) {
+        domain.domain = ~((DomBitField)(~0x0) << domain.numElements);
+    }
+    else {
+        domain.domain = 0;
+    }
+
+    return domain;
+}
+
 bool DomAddElement(Domain* domain, const DomElementValue element)
 {
     const DomBitField bitMask = 0x1 << (element - domain->minValue);

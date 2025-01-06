@@ -113,10 +113,9 @@ static bool GetValue(FILE* file, int* value)
 ** Helper function to accomplish the actual work of reading a file into the
 ** Sudoku grid.
 */
-static bool ReadSudokuFile(FILE* file, SudokuPuzzle pzl)
+static bool ReadSudokuFile(FILE* file, SudokuPuzzle* pzl)
 {
-    Grid grid = GetGrid(pzl);
-    const unsigned int gridOrder = GetGridOrder(grid);
+    const unsigned int gridOrder = GetGridOrder(pzl->grid);
     unsigned int row = 0;
 
     for (row = 0; row < gridOrder; ++row) {
@@ -138,7 +137,7 @@ static bool ReadSudokuFile(FILE* file, SudokuPuzzle pzl)
                 return false;
             }
 
-            square = GetSquare(grid, row, col);
+            square = GetSquare(pzl->grid, row, col);
             assert(square != NULL);
 
             square->value = input;
@@ -148,7 +147,7 @@ static bool ReadSudokuFile(FILE* file, SudokuPuzzle pzl)
     return true;
 }
 
-bool LoadSudoku(SudokuPuzzle pzl, const char* filename)
+bool LoadSudoku(SudokuPuzzle* pzl, const char* filename)
 {
     bool success = true;
     FILE* file = fopen(filename, "r");

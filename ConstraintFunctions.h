@@ -28,11 +28,13 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef VALIDATION_FUNCTION_H
-#define VALIDATION_FUNCTION_H
+#ifndef CONSTRAINT_FUNCTION_H
+#define CONSTRAINT_FUNCTION_H
 
 #include "Grid.h"
 #include "Region.h"
+
+#include "common/Domain.h"
 
 #include <stdbool.h>
 
@@ -43,4 +45,4 @@
 */
 typedef bool (*ValidationFunction)(Grid, Region*);
 
-#endif // !VALIDATION_FUNCTION_H
+#endif // !CONSTRAINT_FUNCTION_H

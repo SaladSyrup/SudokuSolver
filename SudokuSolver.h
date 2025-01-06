@@ -48,6 +48,6 @@
 ** 'succesful' means the solver ran to completion with no errors and the Sudoku
 ** grid is updated with a partial solution.
 */
-typedef bool (*SolverFunction)(SudokuPuzzle);
+typedef bool (*SolverFunction)(SudokuPuzzle*);
 
 #endif // !SUDOKU_SOLVER_H

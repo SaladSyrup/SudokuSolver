@@ -1,5 +1,5 @@
 /*
-** SudokuFile.h
+** AC3Solver.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,36 +28,24 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_FILE_H
-#define SUDOKU_FILE_H
+#ifndef AC3SOLVER_H
+#define AC3SOLVER_H
 
-#include "SudokuPuzzle.h"
+#include "..\SudokuSolver.h"
 
 #include <stdbool.h>
 
 /*
-** Sudoku files are text files containing a series of square values separated
-** by a comma or a line feed ('\n').
+** Solves a sudoku using the AC-3 (arc consistency) algorithm. This is a
+** constraint propagation algorithm where the domain of possible values for
+** each square is reduced until only one value remains. Unlike the backtrack
+** solver, AC-3 is not capable of solving all sudokus.
 **
-**  - The sudoku grid is filled in row-wise using values from the file. File
-**    reading ends once the grid is filled.
-**
-**  - Values must be in the range of 1 to 9. No attempt is made to parse
-**    multidigit values.
-**
-**  - A comma without a preceding value is considered VALUE_NONE.
-**
-**  - Line feeds without a preceding value are ignored.
-**
-**  - Whitespace other than '\n' is always ignored. Any character outside the
-**    range of '!' to '~' is considered whitespace.
+** Domains are maintained on a regional basis, where each the domain for each
+** region consists of values that have not yet been assigned to a square within
+** the region. The domain for an individual square is the intersection of all
+** the regional domains of which the square is a member.
 */
+bool AC3Solver(SudokuPuzzle* pzl);
 
-/*
-** Loads Sudoku from file.
-**
-** Returns true if the file successfully loaded.
-*/
-bool LoadSudoku(SudokuPuzzle* pzl, const char* filename);
-
-#endif // !SUDOKU_FILE_H
+#endif // !AC3SOLVER_H

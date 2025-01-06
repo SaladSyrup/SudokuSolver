@@ -42,11 +42,19 @@
 typedef unsigned short DomBitField;
 typedef unsigned int DomElementValue;
 
-typedef struct {
+struct _DomainType {
     DomBitField domain;
     DomElementValue minValue;
     DomElementValue numElements;
-} Domain;
+};
+
+typedef struct _DomainType Domain;
+
+/*
+** Creates a new domain with the given values. If fullDomain is true the
+** created domain will be full; otherwise it will be empty.
+*/
+Domain DomNew(const DomElementValue minValue, const DomElementValue numElements, const bool fullDomain);
 
 /*
 ** Adds or removes an element from the domain. Behavior is undefined if element

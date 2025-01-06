@@ -37,7 +37,7 @@
 
 /* Structure to avoid multiple calls to retrieve same information */
 typedef struct {
-    SudokuPuzzle pzl;
+    SudokuPuzzle* pzl;
     Grid grid;
     unsigned int gridOrder;
     unsigned int numSquares;
@@ -78,12 +78,14 @@ static bool BacktrackSearch(const PuzzleInfo* const pzlInfo, const unsigned int 
     return false;
 }
 
-bool BacktrackSolver(SudokuPuzzle pzl)
+bool BacktrackSolver(SudokuPuzzle* pzl)
 {
     PuzzleInfo pzlInfo = { NULL };
 
+    assert(pzl != NULL);
+
     pzlInfo.pzl = pzl;
-    pzlInfo.grid = GetGrid(pzl);
+    pzlInfo.grid = pzl->grid;
     pzlInfo.gridOrder = GetGridOrder(pzlInfo.grid);
     pzlInfo.numSquares = pzlInfo.gridOrder * pzlInfo.gridOrder;
 

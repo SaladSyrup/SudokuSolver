@@ -37,7 +37,7 @@ enum { ROW_0 = 0, ROW_1, ROW_2, ROW_3, ROW_4, ROW_5, ROW_6, ROW_7, ROW_8 };
 enum { COL_0 = 0, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8 };
 
 /*****************************************************************************/
-/*                   Define constraints for standard Sudoku                  */
+/* Constraint functions                                                      */
 /*****************************************************************************/
 
 /*
@@ -47,11 +47,14 @@ enum { COL_0 = 0, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8 };
 bool UniqueValues(Grid grid, Region* region)
 {
     unsigned int locationIndex = 0;
-    GridLocation* locations = region->locations;
+    GridLocation* locations = NULL;
     bool valueFound[numSquareValues] = { false };
 
+    assert(region != NULL);
+    locations = region->locations;
+
     for (locationIndex = 0; locationIndex < region->regionSize; ++locationIndex) {
-        GridSquare* square = GetSquare(grid, locations[locationIndex].row, locations[locationIndex].col);
+        const GridSquare* const square = GetSquare(grid, locations[locationIndex].row, locations[locationIndex].col);
         assert(square != NULL);
 
         /* VALUE_NONE squares are always valid. */

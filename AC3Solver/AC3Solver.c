@@ -1,5 +1,5 @@
 /*
-** SudokuFile.h
+** AC3Solver.c
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,36 +28,54 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef SUDOKU_FILE_H
-#define SUDOKU_FILE_H
+#include "AC3Solver.h"
 
-#include "SudokuPuzzle.h"
+#include "GridLocationSet.h"
+#include "../common/Domain.h"
 
-#include <stdbool.h>
+#include <assert.h>
+#include <stdlib.h>
 
-/*
-** Sudoku files are text files containing a series of square values separated
-** by a comma or a line feed ('\n').
-**
-**  - The sudoku grid is filled in row-wise using values from the file. File
-**    reading ends once the grid is filled.
-**
-**  - Values must be in the range of 1 to 9. No attempt is made to parse
-**    multidigit values.
-**
-**  - A comma without a preceding value is considered VALUE_NONE.
-**
-**  - Line feeds without a preceding value are ignored.
-**
-**  - Whitespace other than '\n' is always ignored. Any character outside the
-**    range of '!' to '~' is considered whitespace.
-*/
+/* Structure to avoid multiple calls to retrieve same information */
+typedef struct {
+    GridLocationSet* locQueue;
+    Grid grid;
+    Domain* regionDomains;
+    unsigned int numRegions;
+} PuzzleInfo;
 
-/*
-** Loads Sudoku from file.
-**
-** Returns true if the file successfully loaded.
-*/
-bool LoadSudoku(SudokuPuzzle* pzl, const char* filename);
+static bool InitPuzzleInfo(PuzzleInfo* pzlInfo, SudokuPuzzle* pzl)
+{
+    assert(pzl != NULL);
 
-#endif // !SUDOKU_FILE_H
+    pzlInfo->locQueue = NULL;
+    pzlInfo->regionDomains = NULL;
+    pzlInfo->numRegions = 0;
+
+    if (!GLSCreate(&pzlInfo->locQueue)) return false;
+
+    pzlInfo->grid = pzl->grid;
+
+    return true;
+}
+
+static void DestroyPuzzleInfo(PuzzleInfo* pzlInfo)
+{
+    if (pzlInfo != NULL) {
+        GLSDestroy(&pzlInfo->locQueue);
+        free(pzlInfo->regionDomains);
+    }
+}
+
+bool AC3Solver(SudokuPuzzle* pzl)
+{
+    PuzzleInfo pzlInfo;
+    bool success = false;
+
+    if (InitPuzzleInfo(&pzlInfo, pzl)) {
+        success = true;
+    }
+
+    DestroyPuzzleInfo(&pzlInfo);
+    return success;
+}

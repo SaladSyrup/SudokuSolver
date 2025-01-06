@@ -36,6 +36,6 @@
 /*
 ** Prints Sudoku to stdout.
 */
-void PrintSudoku(SudokuPuzzle pzl);
+void PrintSudoku(SudokuPuzzle* pzl);
 
 #endif // !SUDOKU_PRINT_H
