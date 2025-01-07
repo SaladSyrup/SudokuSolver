@@ -141,6 +141,13 @@ static bool ReadSudokuFile(FILE* file, SudokuPuzzle* pzl)
             assert(square != NULL);
 
             square->value = input;
+            if (input == VALUE_NONE) {
+                DomSetFull(&square->domain);
+            }
+            else {
+                DomSetEmpty(&square->domain);
+                DomAddElement(&square->domain, input);
+            }
         }
     }
 

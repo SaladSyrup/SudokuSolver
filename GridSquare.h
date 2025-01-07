@@ -31,6 +31,8 @@
 #ifndef GRID_SQUARE_H
 #define GRID_SQUARE_H
 
+#include "common/Domain.h"
+
 typedef enum {
     VALUE_NONE,
     VALUE_1,
@@ -47,7 +49,12 @@ typedef enum {
 
 typedef unsigned int SquareValue;
 
+/*
+** A GridSquare contains a value and a domain of possible values.
+*/
+
 typedef struct {
+    Domain domain;
     SquareValue value;
 } GridSquare;
 

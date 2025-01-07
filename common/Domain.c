@@ -32,7 +32,7 @@
 
 #include <assert.h>
 
-Domain DomNew(const DomElementValue minValue, const DomElementValue numElements, const bool fullDomain)
+Domain DomCreate(const DomElementValue minValue, const DomElementValue numElements, const bool fullDomain)
 {
     Domain domain = { 0 };
 
@@ -42,10 +42,10 @@ Domain DomNew(const DomElementValue minValue, const DomElementValue numElements,
     domain.numElements = numElements;
 
     if (fullDomain) {
-        domain.domain = ~((DomBitField)(~0x0) << domain.numElements);
+        DomSetFull(&domain);
     }
     else {
-        domain.domain = 0;
+        DomSetEmpty(&domain);
     }
 
     return domain;
@@ -53,10 +53,13 @@ Domain DomNew(const DomElementValue minValue, const DomElementValue numElements,
 
 bool DomAddElement(Domain* domain, const DomElementValue element)
 {
-    const DomBitField bitMask = 0x1 << (element - domain->minValue);
+    DomBitField bitMask = 0;
 
+    assert(domain != NULL);
     assert((sizeof(DomBitField) * 8) >= domain->numElements);
     assert((element >= domain->minValue) && (element < (domain->minValue + domain->numElements)));
+
+    bitMask = 0x1 << (element - domain->minValue);
 
     if (domain->domain & bitMask) return false;    /* Element is already in the domain */
 
@@ -66,15 +69,33 @@ bool DomAddElement(Domain* domain, const DomElementValue element)
 
 bool DomRemoveElement(Domain* domain, const DomElementValue element)
 {
-    const DomBitField bitMask = 0x1 << (element - domain->minValue);
+    DomBitField bitMask = 0;
 
+    assert(domain != NULL);
     assert((sizeof(DomBitField) * 8) >= domain->numElements);
     assert((element >= domain->minValue) && (element < (domain->minValue + domain->numElements)));
+
+    bitMask = 0x1 << (element - domain->minValue);
 
     if (!(domain->domain & bitMask)) return false;     /* Element is not in the domain */
 
     domain->domain &= ~bitMask;
     return true;
+}
+
+void DomSetFull(Domain* domain)
+{
+    assert(domain != NULL);
+    assert((sizeof(DomBitField) * 8) >= domain->numElements);
+
+    domain->domain = ~((DomBitField)(~0x0) << domain->numElements);
+}
+
+void DomSetEmpty(Domain* domain)
+{
+    assert(domain != NULL);
+
+    domain->domain = 0;
 }
 
 unsigned int DomNumElements(const Domain domain)

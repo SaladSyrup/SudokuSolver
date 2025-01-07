@@ -54,7 +54,7 @@ typedef struct _DomainType Domain;
 ** Creates a new domain with the given values. If fullDomain is true the
 ** created domain will be full; otherwise it will be empty.
 */
-Domain DomNew(const DomElementValue minValue, const DomElementValue numElements, const bool fullDomain);
+Domain DomCreate(const DomElementValue minValue, const DomElementValue numElements, const bool fullDomain);
 
 /*
 ** Adds or removes an element from the domain. Behavior is undefined if element
@@ -68,6 +68,12 @@ Domain DomNew(const DomElementValue minValue, const DomElementValue numElements,
 */
 bool DomAddElement(Domain* domain, const DomElementValue element);
 bool DomRemoveElement(Domain* domain, const DomElementValue element);
+
+/*
+** Sets the domain to be full or empty.
+*/
+void DomSetFull(Domain* domain);
+void DomSetEmpty(Domain* domain);
 
 /*
 ** Returns true if domain contains element. Behavior is undefined if element is
