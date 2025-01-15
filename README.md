@@ -4,7 +4,7 @@ A small project for my own learning and experimentation. And for solving Sudokus
 
 ## Usage
 ```c
-SudokuPuzzle pzl = NULL;
+SudokuPuzzle* pzl = NULL;
 SudokuSolver solver = MySolverFunction;
 const char* pzlFile = ".\\sudokus\\test_sudoku.txt";
 bool success = false;
@@ -50,17 +50,15 @@ Sudoku Solver models Sudokus as a square grid and an associated set of constrain
 
 A Sudoku solution is one in which the grid is both complete (no blanks) and valid (each region's constraints are satisfied).
 
-![SudokuSolver Diagram(1)](https://github.com/user-attachments/assets/3c869dee-c894-4613-840f-32bcb0af53c3)
-
-The Sudoku grid is zero indexed from the top left.
-
-`PrintSudoku` prints a puzzle to `stdio`.
+The Sudoku grid is zero indexed from the top left. Each `GridSquare` contains a value (1 through 9 or none) and a domain of possible values.
 
 `LoadSudoku` reads a puzzle from file. The Sudoku file format is described in `SudokuFile.h` and example files are in the `sudokus` directory.
 
 ### Constraints
 
-Constraints consist of a `Region` of the Sudoku grid and an associated `ValidationFunction` used to evaluate square values in the `Region`. A set of standard Sudoku constraints are declared in `SudokuConstraints.h` and defined in `SudokuConstraints.c`.
+Constraints consist of a `Region` of the Sudoku grid and an associated set of `ConstraintFunctions` used to evaluate squares within the `Region`. `ConstraintFunctions` consist of a `ValidationFunction` to verify a region doesn't violate puzzle constraints (e.g., no repeating values) and a `BinaryConstraintUpdate` function to update the domain of one square based on the value of another square.
+
+A set of standard Sudoku constraints are declared in `SudokuConstraints.h` and defined in `SudokuConstraints.c`.
 
 Constraints can be easily created for other Sudoku types, e.g. irregular regions for Jigsaw Sudoku, or additional cage constraints in Killer Sudoku.
 
@@ -69,9 +67,27 @@ Constraints can be easily created for other Sudoku types, e.g. irregular regions
 Sudoku solving functions are protoyped as
 
 ```c
-typedef bool (*SolverFunction)(SudokuPuzzle)
+typedef bool (*SolverFunction)(SudokuPuzzle*);
 ```
 
-`SolverFunction` is used to ease testing multiple solvers against multiple puzzles (see `TEST_LIST[]` in `main.c`).
+`SolverFunction` returns true if the algorithm runs to completion with no errors. Some solvers may successfully complete without solving the Sudoku.
 
-`BacktrackSolver` is currently the only solver. It is a backtracking search.
+#### BacktrackSolver
+
+A basic depth-first backtracking solver. The solver selects a blank square and assigns it a value. If the assignment results in an invalid Sudoku, then other possible values are tested until a valid one is found. The solver then proceeds to the next blank square. If all possible square values have been tested unsuccessfully, the solver backtracks and assigns the previous square a new value.
+
+This implementation of a backtracking solver is naive in that it does not rank blank squares and simply iterates through them left-to-right, top-to-bottom. Additionally, the solver tries all square values 1 through 9.
+
+The BacktrackSolver will solve any valid Sudoku (slowly).
+
+#### AC3Solver
+
+The AC3Solver implements the AC-3 algorithm for arc consistency between squares within a region. The AC3Solver maintains a domain of possible values for each square. If a square's domain contains only one value, then that value is assigned to the square and the domain is updated for all other squares that share a region with the updated square.
+
+This solver uses a red-black tree to maintain a set of squares whose domains have been updated due to value assignment. It will not evaluate unaffected squares.
+
+AC3Solver is only capable of solving simple puzzles.
+
+#### AC3Backtrack
+
+The AC3Backtrack solver uses the AC3Solver to simplify puzzles before solving with the BacktrackSolver.
