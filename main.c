@@ -32,6 +32,7 @@
 #include "SudokuFile.h"
 #include "SudokuPrint.h"
 #include "AC3Solver/AC3Solver.h"
+#include "AC3Backtrack/AC3Backtrack.h"
 #include "BacktrackSolver/BacktrackSolver.h"
 
 #include <assert.h>
@@ -59,27 +60,38 @@ typedef struct {
 
 SolverTest TEST_LIST[] = {
     /*  SolverFunction      name                    testFile                            numTries        stats    */
-    //{   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\original_sudoku.txt",  10,             {   0   }   },
+    {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\original_sudoku.txt",  10,             {   0   }   },
     {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\test_sudoku.txt",      10,             {   0   }   },
     {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\one_star.txt",         10,             {   0   }   },
     {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\two_star.txt",         10,             {   0   }   },
-    //{   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\three_star.txt",       10,             {   0   }   },
-    //{   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\four_star.txt",        10,             {   0   }   },
-    //{   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\five_star.txt",        10,             {   0   }   },
-    //{   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\super.txt",            10,             {   0   }   },
-    //{   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\extreme.txt",          10,             {   0   }   },
-    //{   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\blank.txt",            10,             {   0   }   },
+    {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\three_star.txt",       10,             {   0   }   },
+    {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\four_star.txt",        10,             {   0   }   },
+    {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\five_star.txt",        10,             {   0   }   },
+    {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\super.txt",            10,             {   0   }   },
+    {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\extreme.txt",          10,             {   0   }   },
+    {   BacktrackSolver,    "BacktrackSolver",      ".\\sudokus\\blank.txt",            10,             {   0   }   },
 
-    //{   AC3Solver,          "AC3Solver",            ".\\sudokus\\original_sudoku.txt",  10,             {   0   }   },
+    {   AC3Solver,          "AC3Solver",            ".\\sudokus\\original_sudoku.txt",  10,             {   0   }   },
     {   AC3Solver,          "AC3Solver",            ".\\sudokus\\test_sudoku.txt",      10,             {   0   }   },
     {   AC3Solver,          "AC3Solver",            ".\\sudokus\\one_star.txt",         10,             {   0   }   },
     {   AC3Solver,          "AC3Solver",            ".\\sudokus\\two_star.txt",         10,             {   0   }   },
-    //{   AC3Solver,          "AC3Solver",            ".\\sudokus\\three_star.txt",       10,             {   0   }   },
-    //{   AC3Solver,          "AC3Solver",            ".\\sudokus\\four_star.txt",        10,             {   0   }   },
-    //{   AC3Solver,          "AC3Solver",            ".\\sudokus\\five_star.txt",        10,             {   0   }   },
-    //{   AC3Solver,          "AC3Solver",            ".\\sudokus\\super.txt",            10,             {   0   }   },
-    //{   AC3Solver,          "AC3Solver",            ".\\sudokus\\extreme.txt",          10,             {   0   }   },
-    //{   AC3Solver,          "AC3Solver",            ".\\sudokus\\blank.txt",            10,             {   0   }   },
+    {   AC3Solver,          "AC3Solver",            ".\\sudokus\\three_star.txt",       10,             {   0   }   },
+    {   AC3Solver,          "AC3Solver",            ".\\sudokus\\four_star.txt",        10,             {   0   }   },
+    {   AC3Solver,          "AC3Solver",            ".\\sudokus\\five_star.txt",        10,             {   0   }   },
+    {   AC3Solver,          "AC3Solver",            ".\\sudokus\\super.txt",            10,             {   0   }   },
+    {   AC3Solver,          "AC3Solver",            ".\\sudokus\\extreme.txt",          10,             {   0   }   },
+    {   AC3Solver,          "AC3Solver",            ".\\sudokus\\blank.txt",            10,             {   0   }   },
+
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\original_sudoku.txt",  10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\test_sudoku.txt",      10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\one_star.txt",         10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\two_star.txt",         10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\three_star.txt",       10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\four_star.txt",        10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\five_star.txt",        10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\super.txt",            10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\extreme.txt",          10,             {   0   }   },
+    {   AC3BacktrackSolver, "AC3Backtrack",         ".\\sudokus\\blank.txt",            10,             {   0   }   },
 };
 
 unsigned int NUM_TESTS = sizeof(TEST_LIST) / sizeof(TEST_LIST[0]);

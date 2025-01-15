@@ -1,5 +1,5 @@
 /*
-** AC3Solver.h
+** AC3Backtrack.c
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,17 +28,13 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef AC3SOLVER_H
-#define AC3SOLVER_H
+#include "../AC3Solver/AC3Solver.h"
+#include "../BacktrackSolver/BacktrackSolver.h"
 
-#include "..\SudokuSolver.h"
+#include <assert.h>
 
-/*
-** Solves a sudoku using the AC-3 (arc consistency) algorithm. This is a
-** constraint propagation algorithm where the domain of possible values for
-** each square is reduced until only one value remains. Unlike the backtrack
-** solver, AC-3 is not capable of solving all sudokus.
-*/
-bool AC3Solver(SudokuPuzzle* pzl);
-
-#endif // !AC3SOLVER_H
+bool AC3BacktrackSolver(SudokuPuzzle* pzl)
+{
+    assert(pzl != NULL);
+    return (AC3Solver(pzl)&& BacktrackSolver(pzl));
+}
