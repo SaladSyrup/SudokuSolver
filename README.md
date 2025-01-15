@@ -50,6 +50,8 @@ Sudoku Solver models Sudokus as a square grid and an associated set of constrain
 
 A Sudoku solution is one in which the grid is both complete (no blanks) and valid (each region's constraints are satisfied).
 
+![Untitled](https://github.com/user-attachments/assets/04d7cd35-1af7-4b6f-9a56-b10f9c6ccc85)
+
 The Sudoku grid is zero indexed from the top left. Each `GridSquare` contains a value (1 through 9 or none) and a domain of possible values.
 
 `LoadSudoku` reads a puzzle from file. The Sudoku file format is described in `SudokuFile.h` and example files are in the `sudokus` directory.
@@ -80,6 +82,8 @@ This implementation of a backtracking solver is naive in that it does not rank b
 
 The BacktrackSolver will solve any valid Sudoku (slowly).
 
+![BacktrackSolver](https://github.com/user-attachments/assets/e9b2e3e3-e5e1-4e15-b215-76042c58964c)
+
 #### AC3Solver
 
 The AC3Solver implements the AC-3 algorithm for arc consistency between squares within a region. The AC3Solver maintains a domain of possible values for each square. If a square's domain contains only one value, then that value is assigned to the square and the domain is updated for all other squares that share a region with the updated square.
@@ -88,6 +92,10 @@ This solver uses a red-black tree to maintain a set of squares whose domains hav
 
 AC3Solver is only capable of solving simple puzzles.
 
+![AC3Solver](https://github.com/user-attachments/assets/85d3b827-f406-41db-94ec-e3342874dc1d)
+
 #### AC3Backtrack
 
 The AC3Backtrack solver uses the AC3Solver to simplify puzzles before solving with the BacktrackSolver.
+
+![AC3Backtrack](https://github.com/user-attachments/assets/db54226a-0d9c-425e-9c61-bfcd7da56c44)
