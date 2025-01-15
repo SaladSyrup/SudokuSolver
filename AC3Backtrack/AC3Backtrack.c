@@ -1,5 +1,5 @@
 /*
-** ValidationFunction.h
+** AC3Backtrack.c
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,19 +28,13 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef VALIDATION_FUNCTION_H
-#define VALIDATION_FUNCTION_H
+#include "../AC3Solver/AC3Solver.h"
+#include "../BacktrackSolver/BacktrackSolver.h"
 
-#include "Grid.h"
-#include "Region.h"
+#include <assert.h>
 
-#include <stdbool.h>
-
-/*
-** Type for constraint validation functions.
-**
-** Returns true if the given region of the grid is valid.
-*/
-typedef bool (*ValidationFunction)(Grid, Region*);
-
-#endif // !VALIDATION_FUNCTION_H
+bool AC3BacktrackSolver(SudokuPuzzle* pzl)
+{
+    assert(pzl != NULL);
+    return (AC3Solver(pzl)&& BacktrackSolver(pzl));
+}

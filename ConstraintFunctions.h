@@ -1,5 +1,5 @@
 /*
-** DFSSolver.h
+** ValidationFunction.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,16 +28,37 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef DFSSOLVER_H
-#define DFSSOLVER_H
+#ifndef CONSTRAINT_FUNCTION_H
+#define CONSTRAINT_FUNCTION_H
 
-#include "SudokuSolver.h"
+#include "Grid.h"
+#include "Region.h"
+
+#include "common/Domain.h"
 
 #include <stdbool.h>
 
 /*
-** Solves the Sudoku using a depth-first search.
+** Type for constraint validation functions.
+**
+** Returns true if the given region of the grid is valid.
 */
-bool DFSSolver(SudokuPuzzle pzl);
+typedef bool (*ValidationFunction)(Grid, Region*);
 
-#endif // !DFSSOLVER_H
+/*
+** Function type for updating binary arc constraints. Updates the domain of
+** GridSquare a given GridSquare b.
+**
+** Always retrurns false if GridSquare a is not VALUE_NONE, GridSquare b is
+** VALUE_NONE, or if a and b point to the same GridSquare.
+** 
+** Returns true if the domain of GridSquare a is changed.
+*/
+typedef bool (*BinaryConstraintUpdate)(Grid grid, GridLocation a, const GridLocation b);
+
+typedef struct {
+    ValidationFunction validationFunc;
+    BinaryConstraintUpdate binaryConstraint;
+} ConstraintFuncs;
+
+#endif // !CONSTRAINT_FUNCTION_H

@@ -28,8 +28,12 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
+/* TODO: Use a more efficient data structure for searches than an array. */
+
 #ifndef REGION_H
 #define REGION_H
+
+#include <stdbool.h>
 
 /*
 ** Regions define a group of squares within a grid. Regions may be of any size
@@ -52,5 +56,10 @@ typedef struct {
     GridLocation* locations;
     unsigned int regionSize;
 } Region;
+
+/*
+** Returns true if region contains the given location.
+*/
+bool RegionContains(const Region* const region, const GridLocation location);
 
 #endif // !REGION_H

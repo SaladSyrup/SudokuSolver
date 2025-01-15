@@ -39,7 +39,7 @@ typedef struct _GridType* Grid;
 
 /*
 ** Creates a grid of GridSquares with dimensions gridOrder x gridOrder. All
-** grid squares are initialized to 0.
+** grid squares are initialized to 0 (VALUE_NONE) with a full domain.
 **
 ** If successful, the grid parameter is updated to point to the newly created
 ** grid and true is returned.

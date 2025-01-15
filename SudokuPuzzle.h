@@ -32,6 +32,7 @@
 #define SUDOKU_PUZZLE_H
 
 #include "Grid.h"
+#include "SudokuConstraints.h"
 
 #include <stdbool.h>
 
@@ -53,7 +54,10 @@
 ** A Sudoku solution is one in which the grid is both complete (no blanks) and
 ** valid (each region's constraints are satisfied).
 */
-typedef struct _SudokuPuzzleType* SudokuPuzzle;
+typedef struct {
+    Grid grid;
+    ConstraintList* uniqueValue;
+} SudokuPuzzle;
 
 /*
 ** Creates a new Sudoku puzzle. The puzzle grid is blank and standard
@@ -64,24 +68,19 @@ typedef struct _SudokuPuzzleType* SudokuPuzzle;
 **
 ** If unsuccessful, the pzl parameter is not modified and false is returned.
 */
-bool CreateSudoku(SudokuPuzzle* pzl);
+bool CreateSudoku(SudokuPuzzle** pzl);
 
 /*
 ** Destroys the Sudoku puzzle, along with the associated grid and constraints.
 */
-void DestroySudoku(SudokuPuzzle* pzl);
-
-/*
-** Returns the underlying grid.
-*/
-Grid GetGrid(SudokuPuzzle pzl);
+void DestroySudoku(SudokuPuzzle** pzl);
 
 /*
 ** Returns true if all squares have been assigned a value.
 **
 ** Note that a complete grid may be invalid.
 */
-bool isSudokuComplete(SudokuPuzzle pzl);
+bool isSudokuComplete(SudokuPuzzle* pzl);
 
 /*
 ** Returns true if grid squares assigned a value do not violate region
@@ -89,6 +88,6 @@ bool isSudokuComplete(SudokuPuzzle pzl);
 **
 ** Note that a valid grid may be incomplete.
 */
-bool isSudokuValid(SudokuPuzzle pzl);
+bool isSudokuValid(SudokuPuzzle* pzl);
 
 #endif // !SUDOKU_PUZZLE_H

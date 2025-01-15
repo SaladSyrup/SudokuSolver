@@ -1,5 +1,5 @@
 /*
-** Constraint.h
+** BacktrackSolver.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,34 +28,16 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef CONSTRAINT_H
-#define CONSTRAINT_H
+#ifndef BACKTRACKSOLVER_H
+#define BACKTRACKSOLVER_H
 
-#include "Grid.h"
-#include "Region.h"
-#include "ConstraintFunctions.h"
+#include "..\SudokuSolver.h"
 
 #include <stdbool.h>
 
 /*
-** A constraint consists of a region and an associated validation function. The
-** constraint is satisfied when the validation function returns true.
+** Solves the Sudoku using a backtracking algorithm.
 */
-typedef struct {
-    Region region;
-    ConstraintFuncs funcs;
-} Constraint;
+bool BacktrackSolver(SudokuPuzzle* pzl);
 
-typedef struct {
-    Constraint* constraints;
-    unsigned int numConstraints;
-} ConstraintList;
-
-/*
-** Evaluates each constraint in the constraint list against the given grid.
-** Returns true if all constraints are satisfied (i.e. the validation function
-** returns true).
-*/
-bool ConstraintsMet(ConstraintList* list, Grid grid);
-
-#endif // !CONSTRAINT_H
+#endif // !BACKTRACKSOLVER_H

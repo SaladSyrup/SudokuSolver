@@ -1,5 +1,5 @@
 /*
-** Constraint.h
+** AC3Backtrack.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,34 +28,16 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef CONSTRAINT_H
-#define CONSTRAINT_H
+#ifndef AC3BACKTRACK_H
+#define AC3BACKTRACK_H
 
-#include "Grid.h"
-#include "Region.h"
-#include "ConstraintFunctions.h"
-
-#include <stdbool.h>
+#include "..\SudokuSolver.h"
 
 /*
-** A constraint consists of a region and an associated validation function. The
-** constraint is satisfied when the validation function returns true.
+** Solves a sudoku using AC3Solver to reduce the number of blank squares, and
+** then the BacktrackSolver to find a complete solution.
 */
-typedef struct {
-    Region region;
-    ConstraintFuncs funcs;
-} Constraint;
 
-typedef struct {
-    Constraint* constraints;
-    unsigned int numConstraints;
-} ConstraintList;
+bool AC3BacktrackSolver(SudokuPuzzle* pzl);
 
-/*
-** Evaluates each constraint in the constraint list against the given grid.
-** Returns true if all constraints are satisfied (i.e. the validation function
-** returns true).
-*/
-bool ConstraintsMet(ConstraintList* list, Grid grid);
-
-#endif // !CONSTRAINT_H
+#endif // !AC3BACKTRACK_H

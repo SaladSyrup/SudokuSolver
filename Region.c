@@ -1,5 +1,5 @@
 /*
-** Constraint.h
+** Region.c
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,34 +28,21 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef CONSTRAINT_H
-#define CONSTRAINT_H
-
-#include "Grid.h"
 #include "Region.h"
-#include "ConstraintFunctions.h"
 
-#include <stdbool.h>
+#include <assert.h>
 
-/*
-** A constraint consists of a region and an associated validation function. The
-** constraint is satisfied when the validation function returns true.
-*/
-typedef struct {
-    Region region;
-    ConstraintFuncs funcs;
-} Constraint;
+bool RegionContains(const Region* const region, const GridLocation location)
+{
+    GridLocation* regionLoc = NULL;
 
-typedef struct {
-    Constraint* constraints;
-    unsigned int numConstraints;
-} ConstraintList;
+    assert(region != NULL);
+    assert((region->locations != NULL) && (region->regionSize != 0));
 
-/*
-** Evaluates each constraint in the constraint list against the given grid.
-** Returns true if all constraints are satisfied (i.e. the validation function
-** returns true).
-*/
-bool ConstraintsMet(ConstraintList* list, Grid grid);
+    regionLoc = region->locations + region->regionSize;
+    while (regionLoc-- > region->locations) {
+        if ((regionLoc->col == location.col) && (regionLoc->row == location.row)) return true;
+    }
 
-#endif // !CONSTRAINT_H
+    return false;
+}

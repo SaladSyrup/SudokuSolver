@@ -49,11 +49,10 @@ static char ValueToChar(SquareValue value)
     }
 }
 
-void PrintSudoku(SudokuPuzzle pzl)
+void PrintSudoku(SudokuPuzzle* pzl)
 {
     unsigned int row = 0;
-    Grid grid = GetGrid(pzl);
-    unsigned int gridOrder = GetGridOrder(grid);
+    unsigned int gridOrder = GetGridOrder(pzl->grid);
     unsigned int gridWidth =    gridOrder * 3           /* The value and a single space on either side */
                               + gridOrder + 1;          /* Space for column separators and outer frame */
     unsigned int colSpacing = gridWidth / gridOrder;    /* How often to place grid intersections */
@@ -65,7 +64,7 @@ void PrintSudoku(SudokuPuzzle pzl)
 
         putchar('|');
         for (col = 0; col < gridOrder; ++col) {
-            GridSquare* square = GetSquare(grid, row, col);
+            GridSquare* square = GetSquare(pzl->grid, row, col);
 
             assert(square != NULL);
 

@@ -1,5 +1,5 @@
 /*
-** Constraint.h
+** AC3Solver.h
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,34 +28,17 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#ifndef CONSTRAINT_H
-#define CONSTRAINT_H
+#ifndef AC3SOLVER_H
+#define AC3SOLVER_H
 
-#include "Grid.h"
-#include "Region.h"
-#include "ConstraintFunctions.h"
-
-#include <stdbool.h>
+#include "..\SudokuSolver.h"
 
 /*
-** A constraint consists of a region and an associated validation function. The
-** constraint is satisfied when the validation function returns true.
+** Solves a sudoku using the AC-3 (arc consistency) algorithm. This is a
+** constraint propagation algorithm where the domain of possible values for
+** each square is reduced until only one value remains. Unlike the backtrack
+** solver, AC-3 is not capable of solving all sudokus.
 */
-typedef struct {
-    Region region;
-    ConstraintFuncs funcs;
-} Constraint;
+bool AC3Solver(SudokuPuzzle* pzl);
 
-typedef struct {
-    Constraint* constraints;
-    unsigned int numConstraints;
-} ConstraintList;
-
-/*
-** Evaluates each constraint in the constraint list against the given grid.
-** Returns true if all constraints are satisfied (i.e. the validation function
-** returns true).
-*/
-bool ConstraintsMet(ConstraintList* list, Grid grid);
-
-#endif // !CONSTRAINT_H
+#endif // !AC3SOLVER_H

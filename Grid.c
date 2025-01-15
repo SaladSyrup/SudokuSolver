@@ -29,6 +29,7 @@
 */
 
 #include "Grid.h"
+#include "common/Domain.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -42,16 +43,27 @@ typedef struct _GridType {
 bool CreateGrid(Grid* grid, unsigned int gridOrder)
 {
     _GridType* newGrid = (_GridType*)malloc(sizeof(_GridType));
+    const unsigned int numSquares = gridOrder * gridOrder;
 
     assert(grid != NULL);
 
     if (newGrid == NULL) return false;
     
     newGrid->gridOrder = gridOrder;
-    newGrid->grid = calloc((size_t)gridOrder * (size_t)gridOrder, sizeof(GridSquare));
+    newGrid->grid = (GridSquare*)malloc(numSquares * sizeof(GridSquare));
     if (newGrid->grid == NULL) {
         DestroyGrid(&newGrid);
         return false;
+    }
+    else {
+        unsigned int index = 0;
+
+        newGrid->grid[0].value = VALUE_NONE;
+        newGrid->grid[0].domain = DomCreate(VALUE_1, numSquareValues - VALUE_1, true);
+
+        for (index = 1; index < numSquares; ++index) {
+            newGrid->grid[index] = newGrid->grid[0];
+        }
     }
 
     *grid = (Grid)newGrid;

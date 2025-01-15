@@ -56,8 +56,12 @@
 /*
 ** Loads Sudoku from file.
 **
+** Initial values are assigned to both the square and the associated domain.
+** Squares without an initial value are set to VALUE_NONE and the associated
+** domain is full.
+**
 ** Returns true if the file successfully loaded.
 */
-bool LoadSudoku(SudokuPuzzle pzl, const char* filename);
+bool LoadSudoku(SudokuPuzzle* pzl, const char* filename);
 
 #endif // !SUDOKU_FILE_H

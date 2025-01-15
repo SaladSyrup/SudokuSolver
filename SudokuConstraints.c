@@ -37,21 +37,24 @@ enum { ROW_0 = 0, ROW_1, ROW_2, ROW_3, ROW_4, ROW_5, ROW_6, ROW_7, ROW_8 };
 enum { COL_0 = 0, COL_1, COL_2, COL_3, COL_4, COL_5, COL_6, COL_7, COL_8 };
 
 /*****************************************************************************/
-/*                   Define constraints for standard Sudoku                  */
+/* Constraint functions                                                      */
 /*****************************************************************************/
 
 /*
 ** Validation function. Returns false if any square values are repeated in the
 ** region.
 */
-bool UniqueValues(Grid grid, Region* region)
+static bool UniqueValues(Grid grid, Region* region)
 {
     unsigned int locationIndex = 0;
-    GridLocation* locations = region->locations;
+    GridLocation* locations = NULL;
     bool valueFound[numSquareValues] = { false };
 
+    assert(region != NULL);
+    locations = region->locations;
+
     for (locationIndex = 0; locationIndex < region->regionSize; ++locationIndex) {
-        GridSquare* square = GetSquare(grid, locations[locationIndex].row, locations[locationIndex].col);
+        const GridSquare* const square = GetSquare(grid, locations[locationIndex].row, locations[locationIndex].col);
         assert(square != NULL);
 
         /* VALUE_NONE squares are always valid. */
@@ -66,6 +69,30 @@ bool UniqueValues(Grid grid, Region* region)
 
     return true;
 }
+
+/*
+** Function type for updating binary arc constraints. Updates the domain of
+** GridSquare a given GridSquare b.
+**
+** Always retrurns false if GridSquare a is not VALUE_NONE, GridSquare b is
+** VALUE_NONE, or if a and b point to the same GridSquare.
+**
+** Returns true if the domain of GridSquare a is changed.
+*/
+static bool BinaryConstraintUpdater(Grid grid, GridLocation a, const GridLocation b)
+{
+    GridSquare* sqrA = GetSquare(grid, a.row, a.col);
+    GridSquare* sqrB = GetSquare(grid, b.row, b.col);
+
+    assert((sqrA != NULL) && (sqrB != NULL));
+
+    if (sqrA == sqrB) return false;
+    if ((sqrA->value != VALUE_NONE) || (sqrB->value == VALUE_NONE)) return false;
+
+    return DomRemoveElement(&sqrA->domain, sqrB->value);
+}
+
+#define SUDOKU_FUNCS { UniqueValues, BinaryConstraintUpdater }
 
 /*************************************/
 /*       Grid row constraints        */
@@ -94,15 +121,15 @@ GridLocation ROW_8_LOCATIONS[] = { { ROW_8, COL_0 }, { ROW_8, COL_1 }, { ROW_8, 
 #define REGION_ROW_8 { ROW_8_LOCATIONS, sizeof(ROW_8_LOCATIONS) / sizeof(ROW_8_LOCATIONS[0]) }
 
 /* Constraints */
-#define CONSTRAINT_ROW_0 { REGION_ROW_0, UniqueValues }
-#define CONSTRAINT_ROW_1 { REGION_ROW_1, UniqueValues }
-#define CONSTRAINT_ROW_2 { REGION_ROW_2, UniqueValues }
-#define CONSTRAINT_ROW_3 { REGION_ROW_3, UniqueValues }
-#define CONSTRAINT_ROW_4 { REGION_ROW_4, UniqueValues }
-#define CONSTRAINT_ROW_5 { REGION_ROW_5, UniqueValues }
-#define CONSTRAINT_ROW_6 { REGION_ROW_6, UniqueValues }
-#define CONSTRAINT_ROW_7 { REGION_ROW_7, UniqueValues }
-#define CONSTRAINT_ROW_8 { REGION_ROW_8, UniqueValues }
+#define CONSTRAINT_ROW_0 { REGION_ROW_0, SUDOKU_FUNCS }
+#define CONSTRAINT_ROW_1 { REGION_ROW_1, SUDOKU_FUNCS }
+#define CONSTRAINT_ROW_2 { REGION_ROW_2, SUDOKU_FUNCS }
+#define CONSTRAINT_ROW_3 { REGION_ROW_3, SUDOKU_FUNCS }
+#define CONSTRAINT_ROW_4 { REGION_ROW_4, SUDOKU_FUNCS }
+#define CONSTRAINT_ROW_5 { REGION_ROW_5, SUDOKU_FUNCS }
+#define CONSTRAINT_ROW_6 { REGION_ROW_6, SUDOKU_FUNCS }
+#define CONSTRAINT_ROW_7 { REGION_ROW_7, SUDOKU_FUNCS }
+#define CONSTRAINT_ROW_8 { REGION_ROW_8, SUDOKU_FUNCS }
 
 /*************************************/
 /*     Grid column constraints       */
@@ -131,15 +158,15 @@ GridLocation COL_8_LOCATIONS[] = { { ROW_0, COL_8 }, { ROW_1, COL_8 }, { ROW_2, 
 #define REGION_COL_8 {COL_8_LOCATIONS, sizeof(COL_8_LOCATIONS) / sizeof(COL_8_LOCATIONS[0])}
 
 /* Constraints */
-#define CONSTRAINT_COL_0 { REGION_COL_0, UniqueValues }
-#define CONSTRAINT_COL_1 { REGION_COL_1, UniqueValues }
-#define CONSTRAINT_COL_2 { REGION_COL_2, UniqueValues }
-#define CONSTRAINT_COL_3 { REGION_COL_3, UniqueValues }
-#define CONSTRAINT_COL_4 { REGION_COL_4, UniqueValues }
-#define CONSTRAINT_COL_5 { REGION_COL_5, UniqueValues }
-#define CONSTRAINT_COL_6 { REGION_COL_6, UniqueValues }
-#define CONSTRAINT_COL_7 { REGION_COL_7, UniqueValues }
-#define CONSTRAINT_COL_8 { REGION_COL_8, UniqueValues }
+#define CONSTRAINT_COL_0 { REGION_COL_0, SUDOKU_FUNCS }
+#define CONSTRAINT_COL_1 { REGION_COL_1, SUDOKU_FUNCS }
+#define CONSTRAINT_COL_2 { REGION_COL_2, SUDOKU_FUNCS }
+#define CONSTRAINT_COL_3 { REGION_COL_3, SUDOKU_FUNCS }
+#define CONSTRAINT_COL_4 { REGION_COL_4, SUDOKU_FUNCS }
+#define CONSTRAINT_COL_5 { REGION_COL_5, SUDOKU_FUNCS }
+#define CONSTRAINT_COL_6 { REGION_COL_6, SUDOKU_FUNCS }
+#define CONSTRAINT_COL_7 { REGION_COL_7, SUDOKU_FUNCS }
+#define CONSTRAINT_COL_8 { REGION_COL_8, SUDOKU_FUNCS }
 
 /*************************************/
 /*       Subgrid constraints         */
@@ -169,15 +196,15 @@ GridLocation SUB_8_LOCATIONS[] = { { ROW_6, COL_6 }, { ROW_6, COL_7 }, { ROW_6, 
 #define REGION_SUB_8 { SUB_8_LOCATIONS, sizeof(SUB_8_LOCATIONS) / sizeof(SUB_8_LOCATIONS[0]) }
 
 /* Constraints */
-#define CONSTRAINT_SUB_0 { REGION_SUB_0, UniqueValues }
-#define CONSTRAINT_SUB_1 { REGION_SUB_1, UniqueValues }
-#define CONSTRAINT_SUB_2 { REGION_SUB_2, UniqueValues }
-#define CONSTRAINT_SUB_3 { REGION_SUB_3, UniqueValues }
-#define CONSTRAINT_SUB_4 { REGION_SUB_4, UniqueValues }
-#define CONSTRAINT_SUB_5 { REGION_SUB_5, UniqueValues }
-#define CONSTRAINT_SUB_6 { REGION_SUB_6, UniqueValues }
-#define CONSTRAINT_SUB_7 { REGION_SUB_7, UniqueValues }
-#define CONSTRAINT_SUB_8 { REGION_SUB_8, UniqueValues }
+#define CONSTRAINT_SUB_0 { REGION_SUB_0, SUDOKU_FUNCS }
+#define CONSTRAINT_SUB_1 { REGION_SUB_1, SUDOKU_FUNCS }
+#define CONSTRAINT_SUB_2 { REGION_SUB_2, SUDOKU_FUNCS }
+#define CONSTRAINT_SUB_3 { REGION_SUB_3, SUDOKU_FUNCS }
+#define CONSTRAINT_SUB_4 { REGION_SUB_4, SUDOKU_FUNCS }
+#define CONSTRAINT_SUB_5 { REGION_SUB_5, SUDOKU_FUNCS }
+#define CONSTRAINT_SUB_6 { REGION_SUB_6, SUDOKU_FUNCS }
+#define CONSTRAINT_SUB_7 { REGION_SUB_7, SUDOKU_FUNCS }
+#define CONSTRAINT_SUB_8 { REGION_SUB_8, SUDOKU_FUNCS }
 
 Constraint uvCons[] = { CONSTRAINT_ROW_0, CONSTRAINT_ROW_1, CONSTRAINT_ROW_2, CONSTRAINT_ROW_3, CONSTRAINT_ROW_4, CONSTRAINT_ROW_5, CONSTRAINT_ROW_6, CONSTRAINT_ROW_7, CONSTRAINT_ROW_8,
                         CONSTRAINT_COL_0, CONSTRAINT_COL_1, CONSTRAINT_COL_2, CONSTRAINT_COL_3, CONSTRAINT_COL_4, CONSTRAINT_COL_5, CONSTRAINT_COL_6, CONSTRAINT_COL_7, CONSTRAINT_COL_8,

@@ -43,7 +43,11 @@
 ** Returns true if succesful and updates Sudoku grid with the solution.
 **
 ** Returns false if unsuccesful.
+**
+** Some solvers are unable to find a solution to all puzzles. In this case
+** 'succesful' means the solver ran to completion with no errors and the Sudoku
+** grid is updated with a partial solution.
 */
-typedef bool (*SolverFunction)(SudokuPuzzle);
+typedef bool (*SolverFunction)(SudokuPuzzle*);
 
 #endif // !SUDOKU_SOLVER_H

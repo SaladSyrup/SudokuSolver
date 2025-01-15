@@ -1,5 +1,5 @@
 /*
-** DFSSolver.c
+** BacktrackSolver.c
 ** Chris Fletcher
 **
 ** This is free and unencumbered software released into the public domain.
@@ -28,7 +28,7 @@
 ** For more information, please refer to <https://unlicense.org>
 */
 
-#include "DFSSolver.h"
+#include "BacktrackSolver.h"
 
 #include <assert.h>
 
@@ -37,23 +37,24 @@
 
 /* Structure to avoid multiple calls to retrieve same information */
 typedef struct {
-    SudokuPuzzle pzl;
+    SudokuPuzzle* pzl;
     Grid grid;
     unsigned int gridOrder;
     unsigned int numSquares;
 } PuzzleInfo;
 
 /*
-** Accomplishes the work of the depth first search.
+** Accomplishes the work of the bactracking search.
 */
-static bool DFS(const PuzzleInfo* const pzlInfo, const unsigned int sqrDepth)
+static bool BacktrackSearch(const PuzzleInfo* const pzlInfo, const unsigned int sqrDepth)
 {
     GridSquare* square = NULL;
     SquareValue testValue = VALUE_1;
 
     /* We've reached the end--time to test if we've found a solution! */
     if (sqrDepth >= pzlInfo->numSquares) {
-        return (isSudokuValid(pzlInfo->pzl) && isSudokuComplete(pzlInfo->pzl));
+        assert(isSudokuComplete(pzlInfo->pzl));
+        return isSudokuValid(pzlInfo->pzl);
     }
 
     square = GetSquare(pzlInfo->grid, GET_GRID_ROW(sqrDepth, pzlInfo->gridOrder), GET_GRID_COL(sqrDepth, pzlInfo->gridOrder));
@@ -61,7 +62,7 @@ static bool DFS(const PuzzleInfo* const pzlInfo, const unsigned int sqrDepth)
 
     /* If this square already has a value, move to the next one */
     if (square->value != VALUE_NONE) {
-        return DFS(pzlInfo, sqrDepth + 1);
+        return BacktrackSearch(pzlInfo, sqrDepth + 1);
     }
 
     /* Otherwise, we need to test each value in turn */
@@ -69,7 +70,7 @@ static bool DFS(const PuzzleInfo* const pzlInfo, const unsigned int sqrDepth)
         square->value = testValue;
 
         /* If grid is valid with testValue, move to next square */
-        if (isSudokuValid(pzlInfo->pzl) && DFS(pzlInfo, sqrDepth + 1)) return true;
+        if (isSudokuValid(pzlInfo->pzl) && BacktrackSearch(pzlInfo, sqrDepth + 1)) return true;
     }
 
     /* No solution available from here with predecessor square values */
@@ -77,14 +78,16 @@ static bool DFS(const PuzzleInfo* const pzlInfo, const unsigned int sqrDepth)
     return false;
 }
 
-bool DFSSolver(SudokuPuzzle pzl)
+bool BacktrackSolver(SudokuPuzzle* pzl)
 {
     PuzzleInfo pzlInfo = { NULL };
 
+    assert(pzl != NULL);
+
     pzlInfo.pzl = pzl;
-    pzlInfo.grid = GetGrid(pzl);
+    pzlInfo.grid = pzl->grid;
     pzlInfo.gridOrder = GetGridOrder(pzlInfo.grid);
     pzlInfo.numSquares = pzlInfo.gridOrder * pzlInfo.gridOrder;
 
-    return DFS(&pzlInfo, 0);
+    return BacktrackSearch(&pzlInfo, 0);
 }
