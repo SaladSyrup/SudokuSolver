@@ -52,7 +52,6 @@ bool SetCreate(Set** set, SetElementFunctions keyFuncs)
         return false;
     }
 
-    newSet->numElements = 0;
     newSet->tree = tree;
     SetResetIterator(newSet);
 
@@ -84,7 +83,6 @@ bool SetInsert(Set* set, void* element)
     result = RBTInsert(set->tree, element, true);
     if (RBTIsNil(result)) return false;
 
-    ++set->numElements;
     return true;
 }
 
@@ -104,7 +102,6 @@ bool SetDelete(Set* set, void* element)
     }
 
     RBTDeleteNode(set->tree, toDeleteNode);
-    --set->numElements;
 
     return true;
 }
@@ -155,7 +152,6 @@ bool SetPop(Set* set, void** element)
     }
 
     RBTDeleteNode(set->tree, set->tree->root);
-    --set->numElements;
 
     return true;
 }
@@ -186,7 +182,6 @@ bool SetClear(Set* set)
 
     RBTDestroy(&set->tree);
     set->tree = newTree;
-    set->numElements = 0;
     SetResetIterator(set);
 
     return true;
@@ -195,11 +190,11 @@ bool SetClear(Set* set)
 unsigned int SetNumElements(Set* set)
 {
     assert(set != NULL);
-    return set->numElements;
+    return RBTNumNodes(set->tree);
 }
 
 bool SetIsEmpty(Set* set)
 {
     assert(set != NULL);
-    return (set->numElements == 0);
+    return (RBTIsNil(set->tree->root));
 }

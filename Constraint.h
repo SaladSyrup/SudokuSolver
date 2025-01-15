@@ -43,7 +43,8 @@
 */
 typedef struct {
     Region region;
-    ValidationFunction validationFunc;
+    ConstraintFuncs funcs;
+//    ValidationFunction validationFunc;
 } Constraint;
 
 typedef struct {

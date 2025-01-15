@@ -41,7 +41,7 @@ bool ConstraintsMet(ConstraintList* list, Grid grid)
 
     for (index = 0; index < list->numConstraints; ++index) {
         Constraint* constraint = &list->constraints[index];
-        ValidationFunction isRegionValid = constraint->validationFunc;
+        ValidationFunction isRegionValid = constraint->funcs.validationFunc;
 
         if (!isRegionValid(grid, &constraint->region)) return false;
     }

@@ -32,50 +32,121 @@
 
 #include "GridLocationSet.h"
 #include "../common/Domain.h"
+#include "../SudokuPrint.h"
 
 #include <assert.h>
 #include <stdlib.h>
 
-/* Structure to avoid multiple calls to retrieve same information */
-typedef struct {
-    GridLocationSet* locQueue;
-    Grid grid;
-    Domain* regionDomains;
-    unsigned int numRegions;
-} PuzzleInfo;
-
-static bool InitPuzzleInfo(PuzzleInfo* pzlInfo, SudokuPuzzle* pzl)
+/*
+** Initializes location set and GridSquare domains.
+*/
+static void PopulateSet(GridLocationSet* set, SudokuPuzzle* pzl)
 {
-    assert(pzl != NULL);
+    const unsigned int gridOrder = GetGridOrder(pzl->grid);
+    unsigned int row = 0;
 
-    pzlInfo->locQueue = NULL;
-    pzlInfo->regionDomains = NULL;
-    pzlInfo->numRegions = 0;
+    assert(set != NULL);
 
-    if (!GLSCreate(&pzlInfo->locQueue)) return false;
+    for (row = 0; row < gridOrder; ++row) {
+        unsigned int col = 0;
+        for (col = 0; col < gridOrder; ++col) {
+            GridSquare* square = GetSquare(pzl->grid, row, col);
+            assert(square != NULL);
 
-    pzlInfo->grid = pzl->grid;
+            if (square->value == VALUE_NONE) {
+                DomSetFull(&square->domain);
+            }
+            else {
+                GridLocation location = { 0, 0 };
 
-    return true;
+                DomSetEmpty(&square->domain);
+                DomAddElement(&square->domain, square->value);
+
+                location.row = row;
+                location.col = col;
+                GLSInsert(set, location);
+            }
+        }
+    }
 }
 
-static void DestroyPuzzleInfo(PuzzleInfo* pzlInfo)
+/*
+** Helper function for AC3. Given the location of an modified square, updates
+** the domain of all squares in the same regions as the modified square and
+** adds affected squares to the location set.
+*/
+static void UpdateAffectedSquares(GridLocation modifiedLoc, SudokuPuzzle* pzl, GridLocationSet* locationSet)
 {
-    if (pzlInfo != NULL) {
-        GLSDestroy(&pzlInfo->locQueue);
-        free(pzlInfo->regionDomains);
+    const Constraint* constraints = pzl->uniqueValue->constraints;
+    const unsigned int numConstraints = pzl->uniqueValue->numConstraints;
+
+    unsigned int index = 0;
+
+    for (index = 0; index < numConstraints; ++index) {
+
+        /* If this region contains the modified square */
+        if (RegionContains(&constraints[index].region, modifiedLoc)) {
+
+            const GridLocation* locations = constraints[index].region.locations;
+            const unsigned int regionSize = constraints[index].region.regionSize;
+            BinaryConstraintUpdate updaterFunc = constraints[index].funcs.binaryConstraint;
+            unsigned int regIndex = 0;
+
+            /* Move through each square of the region */
+            for (regIndex = 0; regIndex < regionSize; ++regIndex) {
+
+                /* Update the domain */
+                if (updaterFunc(pzl->grid, locations[regIndex], modifiedLoc)) {
+
+                    /* And add to the locationSet if the domain is changed */
+                    GLSInsert(locationSet, locations[regIndex]);
+                }
+            }
+        }
     }
+}
+
+/*
+** Implements the AC3 algorithm.
+*/
+static bool AC3(SudokuPuzzle* pzl)
+{
+    bool success = true;
+    GridLocationSet* locationSet = NULL;
+
+    assert(pzl != NULL);
+
+    if (!GLSCreate(&locationSet)) return false;
+
+    PopulateSet(locationSet, pzl);
+
+    while ((!GLSIsEmpty(locationSet)) && (success == true)) {
+        GridLocation location = { 0,0 };
+        GridSquare* square = NULL;
+
+        GLSPop(locationSet, &location);
+        square = GetSquare(pzl->grid, location.row, location.col);
+        assert(square != NULL);
+
+        /* If domain is empty, this square has no possible values */
+        if (DomIsEmptyDomain(square->domain)) success = false;
+
+        /* If domain is singleton, we've reduced the number of possible values to one */
+        if (DomIsSingletonDomain(square->domain)) {
+
+            /* Update the square's value */
+            square->value = DomGetLSValue(square->domain);
+
+            /* and update the affected squares */
+            UpdateAffectedSquares(location, pzl, locationSet);
+        }
+    }
+
+    GLSDestroy(&locationSet);
+    return success;
 }
 
 bool AC3Solver(SudokuPuzzle* pzl)
 {
-    PuzzleInfo pzlInfo;
-    bool success = false;
-
-    if (InitPuzzleInfo(&pzlInfo, pzl)) {
-        success = true;
-    }
-
-    DestroyPuzzleInfo(&pzlInfo);
-    return success;
+    return AC3(pzl);
 }

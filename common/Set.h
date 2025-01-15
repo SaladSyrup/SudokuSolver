@@ -48,7 +48,6 @@ typedef RBTNode SetIterator;
 
 typedef struct {
     RBTree* tree;
-    unsigned int numElements;
     SetIterator* iterator;
 } _SetType;
 

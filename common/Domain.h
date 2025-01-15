@@ -70,6 +70,14 @@ bool DomAddElement(Domain* domain, const DomElementValue element);
 bool DomRemoveElement(Domain* domain, const DomElementValue element);
 
 /*
+** Returns the least or most significant value in the domain.
+**
+** Behavior is undefined if domain is empty.
+*/
+DomElementValue DomGetLSValue(const Domain domain);
+DomElementValue DomGetMSValue(const Domain domain);
+
+/*
 ** Sets the domain to be full or empty.
 */
 void DomSetFull(Domain* domain);

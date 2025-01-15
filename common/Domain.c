@@ -37,6 +37,7 @@ Domain DomCreate(const DomElementValue minValue, const DomElementValue numElemen
     Domain domain = { 0 };
 
     assert((sizeof(DomBitField) * 8) >= numElements);
+    assert(numElements > 0);
 
     domain.minValue = minValue;
     domain.numElements = numElements;
@@ -81,6 +82,36 @@ bool DomRemoveElement(Domain* domain, const DomElementValue element)
 
     domain->domain &= ~bitMask;
     return true;
+}
+
+DomElementValue DomGetLSValue(const Domain domain)
+{
+    DomElementValue elementNum = 0;
+
+    /* Dont get values from empty domains */
+    assert(!DomIsEmptyDomain(domain));
+    assert((sizeof(DomBitField) * 8) >= domain.numElements);
+
+    do {
+        if (domain.domain & (0x01 << elementNum)) return (elementNum + domain.minValue);
+    } while (++elementNum < domain.numElements);
+
+    return 0;
+}
+
+DomElementValue DomGetMSValue(const Domain domain)
+{
+    DomElementValue elementNum = (domain.numElements - 1);
+
+    /* Dont get values from empty domains */
+    assert(!DomIsEmptyDomain(domain));
+    assert((sizeof(DomBitField) * 8) >= domain.numElements);
+
+    do {
+        if (domain.domain & (0x01 << elementNum)) return (elementNum + domain.minValue);
+    } while (elementNum-- > 0);
+
+    return 0;
 }
 
 void DomSetFull(Domain* domain)

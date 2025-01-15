@@ -45,4 +45,20 @@
 */
 typedef bool (*ValidationFunction)(Grid, Region*);
 
+/*
+** Function type for updating binary arc constraints. Updates the domain of
+** GridSquare a given GridSquare b.
+**
+** Always retrurns false if GridSquare a is not VALUE_NONE, GridSquare b is
+** VALUE_NONE, or if a and b point to the same GridSquare.
+** 
+** Returns true if the domain of GridSquare a is changed.
+*/
+typedef bool (*BinaryConstraintUpdate)(Grid grid, GridLocation a, const GridLocation b);
+
+typedef struct {
+    ValidationFunction validationFunc;
+    BinaryConstraintUpdate binaryConstraint;
+} ConstraintFuncs;
+
 #endif // !CONSTRAINT_FUNCTION_H

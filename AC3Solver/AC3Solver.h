@@ -40,11 +40,6 @@
 ** constraint propagation algorithm where the domain of possible values for
 ** each square is reduced until only one value remains. Unlike the backtrack
 ** solver, AC-3 is not capable of solving all sudokus.
-**
-** Domains are maintained on a regional basis, where each the domain for each
-** region consists of values that have not yet been assigned to a square within
-** the region. The domain for an individual square is the intersection of all
-** the regional domains of which the square is a member.
 */
 bool AC3Solver(SudokuPuzzle* pzl);
 

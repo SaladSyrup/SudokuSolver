@@ -322,6 +322,26 @@ bool RBTIsNil(const RBTNode* node)
     return (node == RBTNilNode);
 }
 
+unsigned int RBTNumNodes(RBTree* tree)
+{
+    RBTNode* node = RBTNilNode;
+    unsigned int numNodes = 0;
+
+    assert(tree != NULL);
+
+    /* Empty tree */
+    if (RBTIsNil(tree->root)) return 0;
+
+    node = RBTMin(tree);
+
+    while (!RBTIsNil(node)) {
+        ++numNodes;
+        node = RBTSuccessor(node);
+    }
+
+    return numNodes;
+}
+
 /*****************************************************************************/
 /* Node insertion functions                                                  */
 /*****************************************************************************/
@@ -465,7 +485,7 @@ static void DeleteRebalance(RBTree* tree, RBTNode* node)
 
             sibling->color = node->parent->color;
             node->parent->color = BLACK;
-            sibling->right->color = BLACK;
+            sibling->children[oppDir]->color = BLACK;
 
             Rotate(tree, node->parent, nodeDir);
             node = tree->root;

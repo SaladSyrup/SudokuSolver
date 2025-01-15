@@ -124,11 +124,11 @@ bool RBTCreate(RBTree** tree, RBTKeyFunctions keyFuncs);
 void RBTDestroy(RBTree** tree);
 
 /*
-** Insert key into tree. Returns a pointer to the new node if successful or a
+** Insert key into tree. Returns a pointer to the new node if successful or
 ** the NIL node if not.
 **
 ** If noDuplicates is true and an equal key already exists in the tree,
-** the a pointer to the already existing node will be returned.
+** then a pointer to the already existing node will be returned.
 */
 RBTNode* RBTInsert(RBTree* tree, const void* key, bool noDuplicates);
 
@@ -161,5 +161,10 @@ RBTNode* RBTSearch(RBTree* tree, const void* key);
 ** Returns true if node is NIL
 */
 bool RBTIsNil(const RBTNode* node);
+
+/*
+** Return number of nodes in the tree.
+*/
+unsigned int RBTNumNodes(RBTree* tree);
 
 #endif // !RBTREE_H
